@@ -1,0 +1,55 @@
+<template name="devwikSelects">
+		<div class='row'>
+
+			<strong> Selects are currently not <a href='http://docs.meteor.com/#reactivity'>reactive.</a></strong> but you can use any select statment including aggregates, sub-selects, etc.<br/>
+			On the server:
+			<pre> new Devwik.SQL.Select('empsCities', 'select employees.*, offices.city from employees, offices where offices.officeCode = employees.officecode');
+		</pre>
+On the client:
+			<pre> var Select = new Meteor.Select('empsCities'); </pre>
+		And then just use standard Meteor operations:
+			<pre> Template.devwikSelects.selects = function () {
+	return Select.find({});
+}; </pre>
+			<p>
+		</div>
+		<div class='row'>
+			<h4>
+				<div class='span2'>
+					Number of Employees
+				</div>
+				<div class='span2'>
+					City
+				</div>
+				<div class='span2'>
+					State
+				</div>
+				<div class='span2'>
+					Country
+				</div>
+			</h4>
+		</div>
+		{{#each selects}}
+		{{> select}}
+		{{/each}}
+	</template>
+
+
+	<template name="select">
+		<div class='row'>
+			<div class='span2'>
+				{{empNumber}}
+			</div>
+			<div class='span2'>
+				{{city}}
+			</div>
+			<div class='span2'>
+				{{state}}
+			</div>
+			<div class='span2'>
+				{{country}}
+			</div>
+		</div>
+	</template>
+
+

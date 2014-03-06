@@ -1,6 +1,12 @@
 <head>
   <title>Say Hello Web-App</title>
+  
 	<script src="https://maps.googleapis.com/maps/api/js?sensor=true"></script>
+	
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css">
+        <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+        <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
 <!--
 	<script>
 		var init_stuff;
@@ -71,7 +77,20 @@
 </head>
 
 <body>
-  {{> page}}
+    <div data-role="page" id="foo">
+
+      	<div data-role="header">
+      		<h1>Say Hello</h1>
+      	</div><!-- /header -->
+		
+  		<div data-role="content">	
+  		  		{{> page}}
+  		  	</div><!-- /content -->
+
+      	<div data-role="footer">
+      		{{> footer}}
+      	</div><!-- /footer -->
+      </div><!-- /page -->
 </body>
 
 <template name="page">
@@ -224,4 +243,8 @@
 			<a href="#" class="btn btn-primary save">Add Event</a>
 		</div>
 	</div>
+</template>
+
+<template name="footer">
+	<h5>Lets try putting the mavigation here, at least for DEMO 1</h5>
 </template>

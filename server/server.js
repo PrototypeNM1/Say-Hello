@@ -7,3 +7,5 @@ Meteor.publish("directory", function() {
 Meteor.publish("current_events", function() {
 	return CurrentEvents.find({});
 });
+
+

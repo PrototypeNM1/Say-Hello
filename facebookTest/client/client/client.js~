@@ -1,0 +1,26 @@
+
+
+Accounts.ui.config({
+	requestPermissions: {
+		facebook: ['email']
+	}
+});
+
+
+
+Template.getInfo.events = {
+	'click input.get': function () {
+		var name = Meteor.user().profile.name;
+		Meteor.subscribe("facebook_info");
+		var email = Meteor.user().services.facebook.email;
+		var gender = Meteor.user().services.facebook.gender;
+		var birthday = Meteor.user().services.facebook.locale;
+	    	document.getElementById("outputUser").value = name;
+	    	document.getElementById("outputEmail").value = email;
+	 	document.getElementById("outputGender").value = gender;
+		document.getElementById("outputBirthday").value = birthday;
+			    
+        }
+};
+
+

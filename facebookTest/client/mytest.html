@@ -1,0 +1,28 @@
+
+<head>
+  <title>facebookSample</title>
+</head>
+
+<body>
+  {{loginButtons align="right"}}
+  <br>
+  <br>
+  {{> getInfo}}
+</body>
+
+<template name="getInfo">
+  <div class="getInfo">
+
+    <input type="button" class="get" value="Get Info" />
+    <br>
+    <input type="text" id="outputUser">
+    <br>
+	<input type="text" id="outputEmail">
+	<br>
+	<input type="text" id="outputGender">
+	<br>
+	<input type="text" id="outputLocale">
+	<br>
+	<input type="text" id="outputID">
+  </div>
+  </template> 

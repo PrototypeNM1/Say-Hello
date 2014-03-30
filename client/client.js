@@ -7,6 +7,15 @@ var initialize;
 var getMarker = function() {console.log("Hello from getMarker!");};
 var GoogleMap;
 
+/*
+	Allows access to the facebook information
+*/
+Accounts.ui.config({
+	requestPermissions: {
+		facebook: [ 'bio', 'email']
+	}
+});
+
 Meteor.subscribe("directory");
 Meteor.subscribe("current_events", function() {
 	initialize = function() {

@@ -232,11 +232,13 @@
 	<div class="event-create">
 		<input type="button" class="new-event" value="Create New Event" />
 	</div>
-	{{#if event_list}}
+	{{#if event_list}} 
+	<ul data-role="listview">
 		{{#each event_list}}
 			<div class="event-item">
-				<input type="button" class="event-name" value="Event | {{name}}" />
+				<li><a href="#">{{name}}</a></li>
 			</div>
-		{{/each}}
+		{{/each}} 
+	</ul>
 	{{/if}}
 </template>

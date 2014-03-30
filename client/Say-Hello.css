@@ -81,31 +81,16 @@ input.chosen {
 }
 
 /* handling portrait vs landscape display styles */
-/* XXX mobile devices don't respect width due to auto-fit webkit feature */
 @media only screen
-and (orientation:portrait)
-and (min-width:1080px)
-and (max-width:1200px) {
-	.map {
-		width: 1080px;
-		height: 1080px;
+and (orientation:landscape) {
+	.content-body {
+		width: 50%;
+		height: 100%;
+		float: left;
 	}
-}
-@media only screen
-and (orientation:portrait)
-and (min-width:800px)
-and (max-width:1199px) {
-	.map {
-		width: 800px;
-		height: 800px;
-	}
-}
-@media only screen
-and (orientation:portrait)
-and (min-width:720px)
-and (max-width:799px) {
-	.map {
-		width: 720px;
-		height: 720px;
+	.footer {
+		width: 50%;
+		height: 100%;
+		float: left;
 	}
 }

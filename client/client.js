@@ -8,6 +8,21 @@ var getMarker = function() {console.log("Hello from getMarker!");};
 var GoogleMap;
 
 /*
+	Constructor for the person object
+	Holds person's information
+*/
+function person(firstname, lastname, email, phoneNumber, gender, loc, idNum)
+{
+	this.firstname = firstname;
+	this.lastname = lastname;
+	this.email = email;
+	this.phoneNumber = phoneNumber;
+	this.gender = gender;
+	this.loc = loc;
+	this.idNum = idNum;
+}
+
+/*
 	Allows access to the facebook information
 */
 Accounts.ui.config({

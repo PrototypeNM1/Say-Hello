@@ -18,7 +18,7 @@ function person(firstname, lastname, email, phoneNumber, gender, loc, idNum)
 	this.loc = loc;
 	this.idNum = idNum;
 }
-
+/*
 /*
 	Allows access to the facebook information
 */
@@ -26,7 +26,7 @@ Accounts.ui.config({
 	requestPermissions: {
 		facebook: [ 'bio', 'email']
 	}
-});
+});*/
 
 
 

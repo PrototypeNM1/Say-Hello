@@ -19,10 +19,9 @@ function person(firstname, lastname, email, phoneNumber, gender, loc, idNum)
 	this.idNum = idNum;
 }
 /*
-/*
 	Allows access to the facebook information
 */
-Accounts.ui.config({
+/*Accounts.ui.config({
 	requestPermissions: {
 		facebook: [ 'bio', 'email']
 	}

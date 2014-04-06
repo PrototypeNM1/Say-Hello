@@ -1,3 +1,13 @@
+/*
+	Allows access to the facebook information
+*/
+/*Accounts.ui.config({
+	requestPermissions: {
+		facebook: [ 'bio', 'email']
+	}
+});*/
+
+
 // Say Hello - client
 var defaultMarkerSymbol;
 var selectedMarkerSymbol;
@@ -6,6 +16,9 @@ var init_stuff;
 var initialize;
 var getMarker = function() {console.log("Hello from getMarker!");};
 var GoogleMap;
+
+
+
 
 /*
 	Constructor for the person object
@@ -22,14 +35,7 @@ function person(firstname, lastname, email, phoneNumber, gender, loc, idNum)
 	this.idNum = idNum;
 }
 
-/*
-	Allows access to the facebook information
-*/
-Accounts.ui.config({
-	requestPermissions: {
-		facebook: [ 'bio', 'email']
-	}
-});
+
 
 Meteor.subscribe("directory");
 Meteor.subscribe("current_events", function() {

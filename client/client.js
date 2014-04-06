@@ -12,9 +12,6 @@
 var defaultMarkerSymbol;
 var selectedMarkerSymbol;
 var selectedMarker;
-var init_stuff;
-var initialize;
-var getMarker = function() {console.log("Hello from getMarker!");};
 var GoogleMap;
 
 
@@ -37,113 +34,118 @@ function person(firstname, lastname, email, phoneNumber, gender, loc, idNum)
 
 
 
-Meteor.subscribe("directory");
-Meteor.subscribe("current_events", function() {
-	initialize = function() {
-		defaultMarkerSymbol = {
-			path: google.maps.SymbolPath.CIRCLE,
-			fillColor: 'blue',
-			strokeColor: 'black',
-			scale: 13,
-			fillOpacity: 1,
-			strokeWeight: 3
-		};
-		selectedMarkerSymbol = {
-			path: google.maps.SymbolPath.CIRCLE,
-			fillColor: 'green',
-			strokeColor: 'black',
-			scale: 13,
-			fillOpacity: 1,
-			strokeWeight: 3
-		};
 
-		init_stuff = window.setInterval(function() {
-		window.clearInterval(init_stuff);
-		var map_canvas = document.getElementById("map_canvas");
-		var map_options = {
-			center: new google.maps.LatLng(40.4319, -86.9202),
-			zoom: 16,
-			scrollwheel: false,
-			disableDoubleClickZoom: true,
-			streetViewControl: false,
-			disableDefaultUI: true,
-			zoomControl: true,
-			//mapMaker: true
-			mapTypeId: google.maps.MapTypeId.HYBRID,
-			styles: [{
-				featureType: "poi",
-				elementType: "label",
-				stylers: [{ visibility: "off" }]
-			}]
-		}
-		GoogleMap = new google.maps.Map(map_canvas, map_options);
-		//google.maps.event.addListener(map, 'idle', function() {
-			// generate markers
-		//	alert("Google Map Loaded.");
-			/*
-			for (var _event in CurrentEvents.find().fetch()) {
-				console.log("Event: " + _event[0]);
-				var marker = getMarker(_event.x, _event.y);
-				marker.setMap(map);
-			}
-			*/
-		console.log("Revent Count (init): " + CurrentEvents.find().count());
-		CurrentEvents.find({}).forEach(function(_event) {
-			console.log("Event: " + _event.name);
+
+
+var initialize = function() {
+	defaultMarkerSymbol = {
+		path: google.maps.SymbolPath.CIRCLE,
+		fillColor: 'blue',
+		strokeColor: 'black',
+		scale: 13,
+		fillOpacity: 1,
+		strokeWeight: 3
+	};
+	selectedMarkerSymbol = {
+		path: google.maps.SymbolPath.CIRCLE,
+		fillColor: 'green',
+		strokeColor: 'black',
+		scale: 13,
+		fillOpacity: 1,
+		strokeWeight: 3
+	};
+	//init_stuff = window.setInterval(function() {
+	//window.clearInterval(init_stuff);
+	var map_canvas = document.getElementById("map_canvas");
+	var map_options = {
+		center: new google.maps.LatLng(40.4319, -86.9202),
+		zoom: 16,
+		scrollwheel: false,
+		disableDoubleClickZoom: true,
+		streetViewControl: false,
+		disableDefaultUI: true,
+		zoomControl: true,
+		//mapMaker: true
+		mapTypeId: google.maps.MapTypeId.HYBRID,
+		styles: [{
+			featureType: "poi",
+			elementType: "label",
+			stylers: [{ visibility: "off" }]
+		}]
+	}
+
+// TODO: MAP CENTERING
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(function(pos) {
+			var coords = pos.coords;
+			alert("Current location: " + coords.latitude + ", " + coords.longitude);
+			map_options.center = new google.maps.LatLng(coords.latitude, coords.longitude);
+	//		alert(map_options.center);
+		});
+	}
+	alert(map_options.center);
+// TODO: MAP CENTERING
+
+	GoogleMap = new google.maps.Map(map_canvas, map_options);
+	//google.maps.event.addListener(map, 'idle', function() {
+		// generate markers
+	//	alert("Google Map Loaded.");
+		/*
+		for (var _event in CurrentEvents.find().fetch()) {
+			console.log("Event: " + _event[0]);
 			var marker = getMarker(_event.x, _event.y);
-			marker.setMap(GoogleMap);
-			marker.setTitle(_event.name);
-			marker.setIcon(defaultMarkerSymbol);
-
-			google.maps.event.addListener(marker, 'click', function() {
-				if (selectedMarker)
-					selectedMarker.setIcon(defaultMarkerSymbol);
-				selectedMarker = marker;
-				selectedMarker.setIcon(selectedMarkerSymbol);
-				Session.set("selected", _event._id);
-			});
-		});
-		//});
-		google.maps.event.addListener(GoogleMap, 'dblclick', function(mouse) {
-			console.log("Lat: " + mouse.latLng.lat() + 
-					"\nLong: " + mouse.latLng.lng());
-			console.log("userId: " + Meteor.userId())
-			if (! Meteor.userId())
-				return; // not logged in
-			var coords = mouse.latLng
-			openCreateDialog(coords.lat(), coords.lng());
-		});
-		}, 100);
-	}
-	/*var openCreateDialog = function(x, y) {
-		Session.set("createCoords", {x: x, y: y});
-		Session.set("createError", null);
-		Session.set("showCreateDialog", true);
-		//initialize();
-	}
-	*/
-	
-	getMarker = function(x, y) {
-		return new google.maps.Marker({
-			position: new google.maps.LatLng(x, y)
-		});
-	}
-	//google.maps.event.addDomListener(window, 'load', initialize);
-	window.onload = (initialize)
-	//console.log(getMarker);
-	/*var createDia = false;
-	Deps.autorun(function(c) {
-		var boo = Session.get("showCreateDialog");
-		if (createDia == true && boo != createDia) {
-			createDia = boo;
-			initialize();
-		} else {
-			createDia = boo;
+			marker.setMap(map);
 		}
-		c.stop();
+		*/
+	console.log("Revent Count (init): " + CurrentEvents.find().count());
+	CurrentEvents.find({}).forEach(function(_event) {
+		console.log("Event: " + _event.name);
+		var marker = getMarker(_event.x, _event.y);
+		marker.setMap(GoogleMap);
+		marker.setTitle(_event.name);
+		marker.setIcon(defaultMarkerSymbol);
+		google.maps.event.addListener(marker, 'click', function() {
+			if (selectedMarker)
+				selectedMarker.setIcon(defaultMarkerSymbol);
+			selectedMarker = marker;
+			selectedMarker.setIcon(selectedMarkerSymbol);
+			Session.set("selected", _event._id);
+		});
 	});
-	*/
-});
+	//});
+	google.maps.event.addListener(GoogleMap, 'dblclick', function(mouse) {
+		console.log("Lat: " + mouse.latLng.lat() + 
+				"\nLong: " + mouse.latLng.lng());
+		console.log("userId: " + Meteor.userId())
+		if (! Meteor.userId())
+			return; // not logged in
+		var coords = mouse.latLng
+		openCreateDialog(coords.lat(), coords.lng());
+	});
+	//}, 100);
+}
+/*var openCreateDialog = function(x, y) {
+	Session.set("createCoords", {x: x, y: y});
+	Session.set("createError", null);
+	Session.set("showCreateDialog", true);
+	//initialize();
+}
+*/
+	
+var getMarker = function(x, y) {
+	return new google.maps.Marker({
+		position: new google.maps.LatLng(x, y)
+	});
+}
+	//google.maps.event.addDomListener(window, 'load', initialize);
+	//window.onload = (initialize)
+
+
+Meteor.subscribe("directory");
+Meteor.subscribe("current_events", initialize);
+Meteor.subscribe("past_events");
+
+Template.map.rendered = initialize;
 
 Meteor.startup(function() {
 	Deps.autorun(function() {
@@ -155,6 +157,9 @@ Meteor.startup(function() {
 });
 
 
+Template.everything.showEventDetails = function() {
+	return Session.get("selected");
+}
 
 Template.details._event = function() {
 	//alert("Current selected: " + Session.get("selected"));
@@ -211,6 +216,9 @@ Template.details.events({
 		navigator.geolocation.getCurrentPosition(function(position) {
 			openCreateDialog(position.coords.latitude, position.coords.longitude);
 		});
+	},
+	'click .close': function() {
+		Session.set("selected", null);
 	}
 });
 
@@ -218,6 +226,24 @@ Template.event_list.event_list = function() {
 	return CurrentEvents.find();
 };
 
+Template.event_list.rendered = function() {
+	$('#event-list').listview('refresh');
+	$('#epanel').height( $('#footer').innerHeight() - 2 * $('#footer-nav').innerHeight() - 20 );
+	$('.event-item').click(function() {
+		Session.set("selected", $(this).attr('name'));
+	});
+};
+
+/*
+Template.attendance.rendered = function() {
+	//$('#attendee-list').listview('refresh');
+	if ( $('#attendee-list').hasClass('ui-listview')) {
+	    $('#attendee-list').listview('refresh');
+	} else {
+    		$('#attendee-list').trigger('create');
+	}
+};
+*/
 Template.footer.events({
 	'click .sign-in': function() {
 		Meteor.call('sign_', Session.get("selected"), true); // sign in
@@ -343,6 +369,31 @@ var openCreateDialog = function(x, y) {
 	Session.set("createCoords", {x: x, y: y});
 	Session.set("createError", null);
 	Session.set("showCreateDialog", true);
+};
+
+window.onload = function() {
+	$( "#create" ).click(function() {
+		//openCreateDialog(0,0);
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(function(pos) {
+				alert("Creating event at location <" + pos.coords.latitude + ", " + pos.coords.longitude + ">");
+				openCreateDialog(pos.coords.latitude, pos.coords.longitude);
+			});
+		}
+	});
+	$( "#moar" ).click(function() {
+		alert("TODO: load more events (need to limit event view to 5 at a time by default, increase by 5 each time more loads");
+	});
+	$( "#past-current" ).click(function() {
+		if (Session.get("event-type") == "current") {
+			Session.set("event-type", "past");
+			alert("Switched to past events display (not implemented)");
+		} else {
+			Session.set("event-type", "current");
+			alert("Switched to current events display (not implemented)");
+		}
+		//alert("TODO: implement past events");
+	});
 };
 
 Template.page.showCreateDialog = function() {

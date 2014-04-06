@@ -73,13 +73,13 @@ input.chosen {
 	overflow: auto;
 	overflow-x: hidden;
 }
-
+/*
 .panel {
 	height: 100%;
 	overflow-x: hidden;
 	overflow-y: auto;
 }
-
+*/
 /* handling portrait vs landscape display styles */
 @media only screen
 and (orientation:landscape) {

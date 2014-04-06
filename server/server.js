@@ -24,6 +24,7 @@ Accounts.onCreateUser(function(options, user) {
     return user;
 });
 
+
 /*
 	The information grabbed from Facebook cannot be accessed by the client
 	unless the server publishes the information
@@ -44,4 +45,6 @@ Meteor.publish("current_events", function() {
 	return CurrentEvents.find({});
 });
 
-
+Meteor.publish("past_events", function() {
+	return PastEvents.find({});
+});

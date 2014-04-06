@@ -27,6 +27,14 @@ function person(firstname, lastname, email, phoneNumber, gender, loc, idNum)
 }
 
 
+/*
+	Allows access to the facebook information
+*/
+/*Accounts.ui.config({
+	requestPermissions: {
+		facebook: [ 'bio', 'email']
+	}
+});*/
 
 
 

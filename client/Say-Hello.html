@@ -4,9 +4,25 @@
 	<script src="https://maps.googleapis.com/maps/api/js?sensor=true"></script>
 	
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-				<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css">
-				<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
-				<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+				<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css">
+			<!--	<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+				<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.4.2.min.js"></script> -->
+				<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+				<script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
+
+	<script>
+	$(function() {
+		$( "#tabs" ).tabs();
+	});
+/*
+	$(document).delegate('[data-role="navbar"] a', 'click', function () {
+	    $(thi).addClass('ui-btn-active');
+	    $('.ui-content').hide();
+	    $('#' + $(this).attr('data-href')).show();
+	    return false;//stop default behavior of link
+	});
+*/
+	</script>
 <!--
 	<script>
 		var init_stuff;
@@ -79,7 +95,7 @@
 <body>
 	<div data-role="page" id="foo">
 
-		<div data-role="header">
+		<div data-role="header" data-theme="b">
 			<div class="login-container">
 				{{#isolate}}
 					{{loginButtons align="right"}}
@@ -87,18 +103,25 @@
 			</div>
 			<h1>Say Hello</h1>	
 		</div><!-- /header -->
-		
-		<div data-role="none" class="content-body">	
-			{{> page}}
-		</div><!-- /content -->
-
-		<div data-role="footer" class="footer">
-			{{#isolate}}
-				{{> footer}}
-			{{/isolate}}
-		</div><!-- /footer -->
+		{{> everything}}	
 	</div><!-- /page -->
 </body>
+
+<template name="everything">
+	{{#isolate}}
+	{{#if showEventDetails}}
+		{{> details}}
+	{{/if}}
+	{{/isolate}}
+	<div data-role="none" class="content-body" data-theme="b">	
+		{{> page}}
+	</div>
+	<div data-role="footer" class="footer" data-theme="b" id="footer">
+		{{#isolate}}
+			{{> footer}}
+		{{/isolate}}
+	</div><!-- /footer -->
+</template>
 
 <template name="page">
 	{{#isolate}}
@@ -110,18 +133,7 @@
 	{{> map}}
 	<script>
 	initialize();
-	</script><!--
-	{{#isolate}}
-		{{#if currentUser}}
-			<div class="pagination-centered">
-				<em><small>Double click the map to post an event!</small></em><br />
-				{{#if canGeolocate}}
-					<p>Alternatively, click <a href="#" target="_blank" class="curLoc">here</a> to create an event where you are.</p>
-				{{/if}}
-			</div>
-		{{/if}}
-	{{/isolate}}
--->
+	</script>
 </template>
 
 <template name="map">
@@ -130,11 +142,17 @@
 </template>
 
 <template name="details">
-	<div class="details">
+	<div class="mask"> </div>
+	<div class="modal">
 	{{#if _event}}
 		{{#with _event}}
-			<h1>{{name}}</h1>
-			<div class="description">{{description}}</div>
+		<div class="modal-header">
+			<button type="button" class="close cancel">&times;</button>
+			<h2>{{name}}</h2>
+			<div class="well well-small">{{description}}</div>
+		</div>
+		<div class="modal-body">
+			<!-- <div class="description">{{description}}</div> -->
 
 			{{#if currentUser}}
 				{{#if attending}}
@@ -161,6 +179,7 @@
 			{{#if canClose}}
 				<--! TODO: add a close event button -->
 			{{/if}}
+		</div>
 		{{/with}}
 	{{else}}
 		<h1 class="muted pagination-centered">
@@ -177,15 +196,19 @@
 <template name="attendance">
 	<div class="attendance well well-small">
 		<div class="muted who"><b>Who Is Here:</b></div>
-		
+	
+		<!-- <ul data-role="listview" id="attendee-list" data-inset="true">	-->
 		{{#each attendees}}
-			<div>
-				{{name}}
-			</div>
+			<a href="#">{{name}}</a>
+			<a href="#" class="link" id="{{name}}">
+				<img title="Share Details with this Person" src="link.png" height="32px" width="32px" alt="Share Details with this Person" />
+			</a>
+			<br />
 		{{/each}}
 
 	</div>
 </template>
+
 
 <template name="createDialog">
 	<div class="mask"> </div>
@@ -214,32 +237,50 @@
 </template>
 
 <template name="footer">
-	<div data-role="navbar" class="footer-bar">
+	<div data-role="tabs" id="footer-tabs">
+	<div data-role="navbar" id="footer-nav">
 		<ul>
-			<li><a href="#e-panel">Events</a></li>
-			<li><a href="#p-panel">People</a></li>
-			<li><a href="#a-panel">Account</a></li>
+			<li><a href="#epanel" data-href="epanel" class="ui-btn-active"><h3>Events</h3></a></li>
+			<li><a href="#ppanel" data-href="ppanel"><h3>People</h3></a></li>
+			<li><a href="#apanel" data-href="apanel"><h3>Account</h3></a></li>
 		</ul>
 	</div><!-- /navbar -->
-	<div id="e-panel" class="panel e-panel ui-content">
+	<div id="epanel" class="ui-content" style="overflow-y: auto;">
 		{{> event_list}}
 	</div>
 	
-	<div id="p-panel" class="panel p-panel ui-content"></div>
-	<div id="a-panel" class="panel a-panel ui-content"></div>
+	<div id="ppanel" class="ui-content">
+		{{> people_tab}}
+	</div>
+	<div id="apanel" class="ui-content">
+		{{> account_tab}}
+	</div>
+	</div>
 </template>
 
 <template name="event_list">
-	<div class="event-create">
-		<input type="button" class="new-event" value="Create New Event" />
-	</div>
+		<!--input type="button" class="ui-btn new-event" value="Create New Event" / -->
 	{{#if event_list}} 
-	<ul data-role="listview">
+	<ul id="event-list" data-role="listview" data-inset="true">
+		<li><a href="#" id="create">Create New Event</a></li>
 		{{#each event_list}}
-			<div class="event-item">
-				<li><a href="#">{{name}}</a></li>
-			</div>
+			
+				<li><a href="#" class="event-item" name="{{_id}}">{{name}}</a></li>
+			
 		{{/each}} 
+		<li><a href="#" id="moar">Load more ...</a></li>
+		<li><a href="#" id="past-current">View Past Events</a></li>
 	</ul>
+	<script>
+		$('#event-list').listview('refresh');
+	</script>
 	{{/if}}
+</template>
+
+<template name="people_tab">
+	<h1>People go here</h1>
+</template>
+
+<template name="account_tab">
+	<h1>Account goes here</h2>
 </template>

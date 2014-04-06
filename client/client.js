@@ -1,11 +1,4 @@
-/*
-	Allows access to the facebook information
-*/
-/*Accounts.ui.config({
-	requestPermissions: {
-		facebook: [ 'bio', 'email']
-	}
-});*/
+
 
 
 // Say Hello - client
@@ -13,6 +6,7 @@ var defaultMarkerSymbol;
 var selectedMarkerSymbol;
 var selectedMarker;
 var GoogleMap;
+var myPerson;
 
 
 
@@ -144,9 +138,17 @@ var getMarker = function(x, y) {
 Meteor.subscribe("directory");
 Meteor.subscribe("current_events", initialize);
 Meteor.subscribe("past_events");
+Meteor.subscribe("facebook_info");
 
 Template.map.rendered = initialize;
-
+/*
+	Allows access to the facebook information
+*/
+/*Accounts.ui.config({
+	requestPermissions: {
+		facebook: [ 'bio', 'email']
+	}
+});*/
 Meteor.startup(function() {
 	Deps.autorun(function() {
 		var selected = Session.get("selected");
@@ -232,6 +234,74 @@ Template.event_list.rendered = function() {
 	$('.event-item').click(function() {
 		Session.set("selected", $(this).attr('name'));
 	});
+};
+
+/*LEVIS CODE GOES HERE*/
+Template.account_tab.events =  {
+	'click .set': function () {
+	
+		var first = Meteor.user().services.facebook.first_name;
+		var last = Meteor.user().services.facebook.last_name;
+		var email = Meteor.user().services.facebook.email;
+		var gender = Meteor.user().services.facebook.gender;
+		var locale = Meteor.user().services.facebook.locale;
+		var id = Meteor.user().services.facebook.id;
+		myPerson = new person(first, last, email, 8675309, gender, locale, id);
+
+		document.getElementById("outputfirst").innerHTML = myPerson.firstname;
+		document.getElementById("outputlast").innerHTML = myPerson.lastname;
+		document.getElementById("outputemail").innerHTML = myPerson.email;
+		document.getElementById("outputphone").innerHTML = myPerson.phoneNumber;
+		document.getElementById("outputgender").innerHTML = myPerson.gender;
+
+		document.getElementById("changefirst").value = myPerson.firstname;
+		document.getElementById("changelast").value = myPerson.lastname;
+		document.getElementById("changeemail").value = myPerson.email;
+		document.getElementById("changephone").value = myPerson.phoneNumber;
+		document.getElementById("changegender").value = myPerson.gender;
+},
+	'click .edit': function () {
+		document.getElementById("outputfirst").style.display = 'none';
+		document.getElementById("outputlast").style.display = 'none';
+		document.getElementById("outputemail").style.display = 'none';
+		document.getElementById("outputphone").style.display = 'none';
+		document.getElementById("outputgender").style.display = 'none';	
+
+		document.getElementById("changefirst").style.display = 'inline';
+		document.getElementById("changelast").style.display = 'inline';
+		document.getElementById("changeemail").style.display = 'inline';
+		document.getElementById("changephone").style.display = 'inline';
+		document.getElementById("changegender").style.display = 'inline';
+
+		
+},
+	'click .save': function () {
+		
+		document.getElementById("outputfirst").style.display = 'inline';
+		document.getElementById("outputlast").style.display = 'inline';
+		document.getElementById("outputemail").style.display = 'inline';
+		document.getElementById("outputphone").style.display = 'inline';
+		document.getElementById("outputgender").style.display = 'inline';	
+
+		document.getElementById("changefirst").style.display = 'none';
+		document.getElementById("changelast").style.display = 'none';
+		document.getElementById("changeemail").style.display = 'none';
+		document.getElementById("changephone").style.display = 'none';
+		document.getElementById("changegender").style.display = 'none';
+
+		myPerson.firstname = document.getElementById("changefirst").value;
+		myPerson.lastname = document.getElementById("changelast").value;
+		myPerson.email = document.getElementById("changeemail").value;
+		myPerson.phoneNumber = document.getElementById("changephone").value;
+		myPerson.gender = document.getElementById("changegender").value;
+
+		document.getElementById("outputfirst").innerHTML = myPerson.firstname;
+		document.getElementById("outputlast").innerHTML = myPerson.lastname;
+		document.getElementById("outputemail").innerHTML = myPerson.email;
+		document.getElementById("outputphone").innerHTML = myPerson.phoneNumber;
+		document.getElementById("outputgender").innerHTML = myPerson.gender;
+		
+}
 };
 
 /*

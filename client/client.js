@@ -148,6 +148,8 @@ Meteor.subscribe("current_events", initialize);
 Meteor.subscribe("past_events");
 Meteor.subscribe("facebook_info");
 
+
+
 Template.map.rendered = initialize;
 /*
 	Allows access to the facebook information
@@ -163,6 +165,7 @@ Meteor.startup(function() {
 		if (selected && ! CurrentEvents.findOne(selected)) {
 			Session.set("selected", null);
 		}
+	
 	});
 });
 
@@ -245,17 +248,18 @@ Template.event_list.rendered = function() {
 };
 
 /*LEVIS CODE GOES HERE*/
+
 Template.account_tab.events =  {
 	'click .set': function () {
 	
-		var first = Meteor.user().services.facebook.first_name;
-		var last = Meteor.user().services.facebook.last_name;
-		var email = Meteor.user().services.facebook.email;
-		var gender = Meteor.user().services.facebook.gender;
-		var locale = Meteor.user().services.facebook.locale;
-		var id = Meteor.user().services.facebook.id;
-		myPerson = new person(first, last, email, 8675309, gender, locale, id);
-
+/*		var first = Meteor.user().services.facebook.first_name;
+var last = Meteor.user().services.facebook.last_name;
+var email = Meteor.user().services.facebook.email;
+var gender = Meteor.user().services.facebook.gender;
+var locale = Meteor.user().services.facebook.locale;
+var id = Meteor.user().services.facebook.id;
+myPerson = new person(first, last, email, 8675309, gender, locale, id);	
+*/
 		document.getElementById("outputfirst").innerHTML = myPerson.firstname;
 		document.getElementById("outputlast").innerHTML = myPerson.lastname;
 		document.getElementById("outputemail").innerHTML = myPerson.email;

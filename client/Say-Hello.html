@@ -199,12 +199,13 @@
 	
 		<!-- <ul data-role="listview" id="attendee-list" data-inset="true">	-->
 		{{#each attendees}}
-			<a href="#">{{name}}</a>
-			<a href="#" class="link" id="{{name}}">
+			<a href="#" id="name">{{name}}</a>
+			<a href="#" class="link" id="shareContact">
 
 
 			  <!-------- Share Contact Info ------>
 				<img title="Share Details with this Person" src="link.png" height="32px" width="32px" alt="Share Details with this Person" />
+				
 			</a>
 			<br />
 		{{/each}}
@@ -273,7 +274,7 @@
     {{/each}} 
     <li><a href="#" id="moar">Load more ...</a></li>
     
- 
+    
 
   
   
@@ -335,5 +336,18 @@
 	<div>
 	<input type="button" class="edit" value="Edit" style="display:inline"/>
 	</div>
+
+
+	<!-- Present Friend List from here -->
+	
+	<h1>Friends</h1>
+	{{#each friendListFinal}}
+	{{this}}<br>
+	{{/each}}
+
+
+
+	
+	
 	
 </template>

@@ -58,36 +58,6 @@ var initialize = function() {
 	};
 	//init_stuff = window.setInterval(function() {
 	//window.clearInterval(init_stuff);
-
-	if (navigator.geolocation) {
-		navigator.geolocation.getCurrentPosition(
-			function(pos) {
-				var coords = pos.coords;
-				var map_canvas = document.getElementById("map_canvas");
-				var map_options = {
-					center: new google.maps.LatLng(coords.latitude, coords.longitude),
-					zoom: 16,
-					scrollwheel: false,
-					disableDoubleClickZoom: true,
-					streetViewControl: false,
-					disableDefaultUI: true,
-					zoomControl: true,
-					//mapMaker: true
-					mapTypeId: google.maps.MapTypeId.HYBRID,
-					styles: [{
-						featureType: "poi",
-						elementType: "label",
-						stylers: [{ visibility: "off" }]
-					}]
-				}
-				GoogleMap = new google.maps.Map(map_canvas, map_options);
-				//alert(map_options.center);
-			},
-			function(err) {
-			},
-			{timeout: 30000, enableHighAccuracy: true, maximumAge: 75000}
-		);
-	}
 	var map_canvas = document.getElementById("map_canvas");
 	var map_options = {
 		center: new google.maps.LatLng(40.4319, -86.9202),
@@ -105,10 +75,20 @@ var initialize = function() {
 			stylers: [{ visibility: "off" }]
 		}]
 	}
-	GoogleMap = new google.maps.Map(map_canvas, map_options);
-	//alert(map_options.center);
+
+// TODO: MAP CENTERING
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(function(pos) {
+			var coords = pos.coords;
+			alert("Current location: " + coords.latitude + ", " + coords.longitude);
+			map_options.center = new google.maps.LatLng(coords.latitude, coords.longitude);
+	//		alert(map_options.center);
+		});
+	}
+	alert(map_options.center);
 // TODO: MAP CENTERING
 
+	GoogleMap = new google.maps.Map(map_canvas, map_options);
 	//google.maps.event.addListener(map, 'idle', function() {
 		// generate markers
 	//	alert("Google Map Loaded.");
@@ -167,6 +147,7 @@ Meteor.subscribe("directory");
 Meteor.subscribe("current_events", initialize);
 Meteor.subscribe("past_events");
 Meteor.subscribe("facebook_info");
+Meteor.subscribe("friends");
 
 Template.map.rendered = initialize;
 /*
@@ -275,6 +256,56 @@ Template.event_list.rendered = function() {
 
 
 
+/*
+
+
+	{{#each friend_list}}
+	{{friendList}}
+	{{/each}}
+	
+*/
+/* Send dat from friends list */
+Template.account_tab.friendListFinal = function() {
+    var currentUser = Meteor.user().services.facebook.first_name
+		+ " " + Meteor.user().services.facebook.last_name;
+
+    var currentEmail = Meteor.user().services.facebook.email;
+    
+    var output = Friends.findOne({}, currentEmail);
+
+    /*
+    var friendsArray = new Array();
+    var count = 0;
+    output.forEach(function(data) {
+
+	console.log(data);
+	
+	//var myArray = data.friendList;
+	console.log("My Friend List Array: " + data.friendList);
+
+	//go through each element of friends list
+	for(var i=0; i<data.friendList.length; i++) {
+	    friendsArray[i] = data.friendList[i];
+	    console.log("Friend" + i + " " + friendsArray[i]);
+	}
+	/*
+	if(count > 0)
+	    friendsArray[count] = data.friendList[count].name;
+	else 
+	    friendsArray[count] = "null";
+	count+1;*/
+	
+    //});
+    //console.log("Final Count: " + count);
+//    count = 0;
+    console.log( "FriendList Array: " + Friends.findOne({}, currentEmail).friendList );
+
+    return Friends.findOne({}, currentEmail).friendList;
+    //return Friends.find({}, currentEmail)[0];
+}
+
+
+
 /*LEVIS CODE GOES HERE*/
 Template.account_tab.events =  {
 	'click .set': function () {
@@ -298,6 +329,19 @@ Template.account_tab.events =  {
 		document.getElementById("changeemail").value = myPerson.email;
 		document.getElementById("changephone").value = myPerson.phoneNumber;
 		document.getElementById("changegender").value = myPerson.gender;
+
+
+	    friendName = "null"; //null at this time
+	    ///These need to be stored in friend list at time of sign in
+	    Friends.insert({
+		myEmail: email,
+		firstName: first,
+		lastName: last,
+		myGender: gender,
+		myId: id,
+		friendList: [{name: friendName}]
+	    });
+
 },
 	'click .edit': function () {
 		document.getElementById("outputfirst").style.display = 'none';
@@ -343,6 +387,49 @@ Template.account_tab.events =  {
 }
 };
 
+
+/********** Contact Share Info ****************************/
+Template.attendance.events({
+    'click #shareContact': function(event) {
+	console.log("Sharing Contact Info with");
+	//user name
+	console.log(document.getElementById("name").innerHTML);
+	var userName = document.getElementById("name").innerHTML;
+	//get contact information and put it in the friend list of current user
+
+	//match this username with the usernames already in the list.
+	var output = Friends.find({});
+	output.forEach(function(data) {
+	    console.log("Name:" + data.firstName + data.lastName);
+	    console.log("Email:" + data.myEmail);
+
+	    var dataUserName = data.firstName + " " + data.lastName;
+	    if(dataUserName == userName) {
+		//update the friend list with contact info of dataUserName and Email
+
+		//get current users email and contact info from meteor services
+		//console.log("Current User Name: " + Meteor.user().services.facebook.first_name + " " + Meteor.user().services.facebook.last_name);
+
+		var currentUserName = Meteor.user().services.facebook.first_name + Meteor.user().services.facebook.last_name;
+		var currentUserEmail = Meteor.user().services.facebook.email;
+
+		//console.log("Current User Email: " + Meteor.user().services.facebook.email);
+		
+		//do proper update
+		var myId = Friends.findOne({myEmail: data.myEmail});
+		console.log("UserId: " + myId._id);
+		Friends.update({_id: myId._id}, {$addToSet: {friendList: currentUserName + " " + currentUserEmail}});
+
+	    }
+	});
+	//var myEmail = contactEmail(userName);
+
+	//console.log(myEmail);
+	
+	//DO
+	//Friends.insert
+    }
+});
 /*
 Template.attendance.rendered = function() {
 	//$('#attendee-list').listview('refresh');
@@ -591,3 +678,5 @@ Template.createDialog.error = function() {
 };
 
 //
+
+

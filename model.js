@@ -1,6 +1,9 @@
+
 // This is the model.js; it is used to set up the client and server
 CurrentEvents = new Meteor.Collection("current_events")
 PastEvents = new Meteor.Collection("past_events")
+Friends = new Meteor.Collection("friends");
+
 
 CurrentEvents.allow({
     insert: function(userId, myEvent) {
@@ -34,6 +37,20 @@ PastEvents.allow({
     }
 });
 
+/************* Friend List **********************/
+Friends.allow({
+    insert: function(userId, friendName) {
+	return true;
+    },
+    update: function(userId, friendName) {
+	return true;
+    }, //update the friend list 
+    remove: function(userId, friendName) {
+	return false;
+	//Sprint 3
+    }
+
+});
 
 
 

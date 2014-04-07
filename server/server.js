@@ -51,3 +51,8 @@ Meteor.publish("current_events", function() {
 Meteor.publish("past_events", function() {
 	return PastEvents.find({});
 });
+
+Meteor.publish("friends", function() {
+    return Friends.find({});
+});
+

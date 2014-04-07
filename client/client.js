@@ -58,6 +58,36 @@ var initialize = function() {
 	};
 	//init_stuff = window.setInterval(function() {
 	//window.clearInterval(init_stuff);
+
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(
+			function(pos) {
+				var coords = pos.coords;
+				var map_canvas = document.getElementById("map_canvas");
+				var map_options = {
+					center: new google.maps.LatLng(coords.latitude, coords.longitude),
+					zoom: 16,
+					scrollwheel: false,
+					disableDoubleClickZoom: true,
+					streetViewControl: false,
+					disableDefaultUI: true,
+					zoomControl: true,
+					//mapMaker: true
+					mapTypeId: google.maps.MapTypeId.HYBRID,
+					styles: [{
+						featureType: "poi",
+						elementType: "label",
+						stylers: [{ visibility: "off" }]
+					}]
+				}
+				GoogleMap = new google.maps.Map(map_canvas, map_options);
+				//alert(map_options.center);
+			},
+			function(err) {
+			},
+			{timeout: 30000, enableHighAccuracy: true, maximumAge: 75000}
+		);
+	}
 	var map_canvas = document.getElementById("map_canvas");
 	var map_options = {
 		center: new google.maps.LatLng(40.4319, -86.9202),
@@ -75,20 +105,10 @@ var initialize = function() {
 			stylers: [{ visibility: "off" }]
 		}]
 	}
-
-// TODO: MAP CENTERING
-	if (navigator.geolocation) {
-		navigator.geolocation.getCurrentPosition(function(pos) {
-			var coords = pos.coords;
-			alert("Current location: " + coords.latitude + ", " + coords.longitude);
-			map_options.center = new google.maps.LatLng(coords.latitude, coords.longitude);
-	//		alert(map_options.center);
-		});
-	}
-	alert(map_options.center);
-// TODO: MAP CENTERING
-
 	GoogleMap = new google.maps.Map(map_canvas, map_options);
+	//alert(map_options.center);
+// TODO: MAP CENTERING
+
 	//google.maps.event.addListener(map, 'idle', function() {
 		// generate markers
 	//	alert("Google Map Loaded.");

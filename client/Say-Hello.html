@@ -201,6 +201,9 @@
 		{{#each attendees}}
 			<a href="#">{{name}}</a>
 			<a href="#" class="link" id="{{name}}">
+
+
+			  <!-------- Share Contact Info ------>
 				<img title="Share Details with this Person" src="link.png" height="32px" width="32px" alt="Share Details with this Person" />
 			</a>
 			<br />
@@ -259,22 +262,41 @@
 </template>
 
 <template name="event_list">
-		<!--input type="button" class="ui-btn new-event" value="Create New Event" / -->
-	{{#if event_list}} 
-	<ul id="event-list" data-role="listview" data-inset="true">
-		<li><a href="#" id="create">Create New Event</a></li>
-		{{#each event_list}}
-			
-				<li><a href="#" class="event-item" name="{{_id}}">{{name}}</a></li>
-			
-		{{/each}} 
-		<li><a href="#" id="moar">Load more ...</a></li>
-		<li><a href="#" id="past-current">View Past Events</a></li>
-	</ul>
-	<script>
-		$('#event-list').listview('refresh');
-	</script>
-	{{/if}}
+  <!--input type="button" class="ui-btn new-event" value="Create New Event" / -->
+  {{#if event_list}} 
+  <ul id="event-list" data-role="listview" data-inset="true">
+    <li><a href="#" id="create">Create New Event</a></li>
+    {{#each event_list}}
+    
+    <li><a href="#" class="event-item" name="{{_id}}">{{name}}</a></li>
+    
+    {{/each}} 
+    <li><a href="#" id="moar">Load more ...</a></li>
+    
+ 
+
+  
+  
+  
+  
+  
+ 
+    <li><a href="#" id="past-current">View Past Events</a></li>
+    {{#each event_list_past}}
+    
+    <li><a href="#" class="event-item" name="{{_id}}">{{name}}</a></li>
+    
+    {{/each}}
+
+  </ul>
+
+  <script>
+    $('#event-list').listview('refresh');
+  </script>
+
+  {{/if}}
+
+
 </template>
 
 <template name="people_tab">

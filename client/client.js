@@ -219,6 +219,9 @@ Template.details.events({
 	},
 	'click .sign-out': function() {
 		Meteor.call('sign_', Session.get("selected"), false); // sign out
+	    //Meteor call to check the attendee list
+
+
 		return false;
 	},
 	'click .curLoc': function() {
@@ -232,9 +235,15 @@ Template.details.events({
 	}
 });
 
+/* Current Events */
 Template.event_list.event_list = function() {
-	return CurrentEvents.find();
+    return CurrentEvents.find();
 };
+
+/* Past Events */
+Template.event_list.event_list_past = function() {
+    return PastEvents.find(); 
+}
 
 Template.event_list.rendered = function() {
 	$('#event-list').listview('refresh');
@@ -243,6 +252,8 @@ Template.event_list.rendered = function() {
 		Session.set("selected", $(this).attr('name'));
 	});
 };
+
+
 
 /*LEVIS CODE GOES HERE*/
 Template.account_tab.events =  {
@@ -463,14 +474,52 @@ window.onload = function() {
 		alert("TODO: load more events (need to limit event view to 5 at a time by default, increase by 5 each time more loads");
 	});
 	$( "#past-current" ).click(function() {
-		if (Session.get("event-type") == "current") {
+		
+	    /*
+	    if (Session.get("event-type") == "current") {
 			Session.set("event-type", "past");
 			alert("Switched to past events display (not implemented)");
 		} else {
 			Session.set("event-type", "current");
 			alert("Switched to current events display (not implemented)");
-		}
+		}*/
+
+	    
 		//alert("TODO: implement past events");
+	   //go throught all the events in current event list, if attendies is == 0 add it to past event list
+
+	    console.log("Searching for events....");
+	    var eventID;
+
+	    CurrentEvents.find({}).forEach(function (_event) {
+		console.log("Event: " + _event.name);
+		console.log("Attendees: " + _event.attendees.length);
+		console.log("Event ID: " + _event._id);
+		if(_event.attendees.length == 0) {
+		    //insert this event in the past event collection
+		    PastEvents.insert({
+			_id: _event._id,
+			owner: _event.owner,
+			name: _event.name,
+			description: _event.description,
+			x: _event.x,
+			y: _event.y,
+			attendees: _event.attendees
+		    });
+		    //var eventID = _event._id;
+		    //remove this event
+		    console.log("Removed event id: " + _event._id);
+		    CurrentEvents.remove({_id: _event._id});
+		    
+		}
+		
+
+		//make a dialog for viewing details of this past event
+		// already done by Derek.
+	    });
+	    //remove this event from current event list
+	    //console.log(eventID);
+
 	});
 };
 

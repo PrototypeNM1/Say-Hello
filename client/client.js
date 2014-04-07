@@ -81,34 +81,32 @@ var initialize = function() {
 					}]
 				}
 				GoogleMap = new google.maps.Map(map_canvas, map_options);
-				alert(map_options.center);
+				//alert(map_options.center);
 			},
 			function(err) {
-				//do nothing
 			},
 			{timeout: 30000, enableHighAccuracy: true, maximumAge: 75000}
 		);
-	} else {
-		var map_canvas = document.getElementById("map_canvas");
-		var map_options = {
-			center: new google.maps.LatLng(40.4319, -86.9202),
-			zoom: 16,
-			scrollwheel: false,
-			disableDoubleClickZoom: true,
-			streetViewControl: false,
-			disableDefaultUI: true,
-			zoomControl: true,
-			//mapMaker: true
-			mapTypeId: google.maps.MapTypeId.HYBRID,
-			styles: [{
-				featureType: "poi",
-				elementType: "label",
-				stylers: [{ visibility: "off" }]
-			}]
-		}
-		GoogleMap = new google.maps.Map(map_canvas, map_options);
-		alert(map_options.center);
 	}
+	var map_canvas = document.getElementById("map_canvas");
+	var map_options = {
+		center: new google.maps.LatLng(40.4319, -86.9202),
+		zoom: 16,
+		scrollwheel: false,
+		disableDoubleClickZoom: true,
+		streetViewControl: false,
+		disableDefaultUI: true,
+		zoomControl: true,
+		//mapMaker: true
+		mapTypeId: google.maps.MapTypeId.HYBRID,
+		styles: [{
+			featureType: "poi",
+			elementType: "label",
+			stylers: [{ visibility: "off" }]
+		}]
+	}
+	GoogleMap = new google.maps.Map(map_canvas, map_options);
+	//alert(map_options.center);
 // TODO: MAP CENTERING
 
 	//google.maps.event.addListener(map, 'idle', function() {

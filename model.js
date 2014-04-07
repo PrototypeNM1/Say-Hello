@@ -147,8 +147,9 @@ Meteor.methods({
 		check(updateTable, {
 			name: String
 		});
+		check(this.userId, String);
 		//console.log(typeof updateTable);
-		check(updateTable, Object);
+		//check(updateTable, Object);
 		if (attendIndex === -1) {
 			// Person is not in the event!
 			if (signing_in) {
@@ -157,12 +158,12 @@ Meteor.methods({
 						{$push: {attendees: updateTable}});
 
 				var userPastEvents = PastEvents.findOne({user: this.userId});
-				if (userPastEvent) {
+				if (userPastEvents) {
 					// document exists for past events for this user, insert event
 					console.log("User has past event entry");
-					PastEvents.update({user: this.userId}, {$push: {events: eventId}});
+					PastEvents.update({user: this.userId}, {$addToSet: {events: eventId}});
 				} else {
-					PastEvents.insert({user: this.userId, events: []});
+					PastEvents.insert({user: this.userId, events: [eventId]});
 					console.log("User did not have past event entry. Created new");
 				}
 			} else {

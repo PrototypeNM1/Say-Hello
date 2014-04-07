@@ -2,14 +2,12 @@
 
 
 // Say Hello - client
-var defaultMarkerSymbol;
-var selectedMarkerSymbol;
-var selectedMarker;
-var GoogleMap;
+// Wait for google maps api to load
+//alert('test');
+var loaded = false;
+var lint;
 var myPerson;
-
-
-
+var counter = 0;
 
 /*
 	Constructor for the person object
@@ -25,6 +23,37 @@ function person(firstname, lastname, email, phoneNumber, gender, loc, idNum)
 	this.loc = loc;
 	this.idNum = idNum;
 }
+$(document).ready(function() { loaded = true; });
+lint = window.setInterval(function() {
+	console.log('------');
+	if (google) {
+		console.log('google exists');
+		if (google.maps) { //google.maps.SymbolPath.CIRCLE
+			console.log('google.maps exists');
+			if (google.maps.SymbolPath) {
+				console.log('google.maps.SymbolPath exists');
+				if (google.maps.SymbolPath.CIRCLE === 0) {
+					console.log('google.maps.SymbolPath.CIRCLE exists');
+					window.clearInterval(lint);
+					LOAD();
+				}
+			}
+		}
+	}
+}, 1000);
+
+
+function LOAD()
+{
+
+var defaultMarkerSymbol;
+var selectedMarkerSymbol;
+var selectedMarker;
+var GoogleMap;
+
+
+
+
 
 
 /*
@@ -58,6 +87,7 @@ var initialize = function() {
 	};
 	//init_stuff = window.setInterval(function() {
 	//window.clearInterval(init_stuff);
+<<<<<<< HEAD
 	var map_canvas = document.getElementById("map_canvas");
 	var map_options = {
 		center: new google.maps.LatLng(40.4319, -86.9202),
@@ -86,6 +116,70 @@ var initialize = function() {
 		});
 	}
 	alert(map_options.center);
+=======
+
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(
+			function(pos) {
+				var coords = pos.coords;
+				var map_canvas = document.getElementById("map_canvas");
+				var map_options = {
+					center: new google.maps.LatLng(coords.latitude, coords.longitude),
+					zoom: 16,
+					scrollwheel: false,
+					disableDoubleClickZoom: true,
+					streetViewControl: false,
+					disableDefaultUI: true,
+					zoomControl: true,
+					//mapMaker: true
+					mapTypeId: google.maps.MapTypeId.HYBRID,
+					styles: [{
+						featureType: "poi",
+						elementType: "label",
+						stylers: [{ visibility: "off" }]
+					}]
+				}
+				GoogleMap = new google.maps.Map(map_canvas, map_options);
+				//alert(map_options.center);
+			},
+			function(err) {
+			},
+			{timeout: 30000, enableHighAccuracy: true, maximumAge: 75000}
+		);
+	} else {
+		var map_canvas = document.getElementById("map_canvas");
+		var map_options = {
+			center: new google.maps.LatLng(40.4319, -86.9202),
+			zoom: 16,
+			scrollwheel: false,
+			disableDoubleClickZoom: true,
+			streetViewControl: false,
+			disableDefaultUI: true,
+			zoomControl: true,
+			//mapMaker: true
+			mapTypeId: google.maps.MapTypeId.HYBRID,
+			styles: [{
+				featureType: "poi",
+				elementType: "label",
+				stylers: [{ visibility: "off" }]
+			}]
+		}
+		GoogleMap = new google.maps.Map(map_canvas, map_options);
+	}
+
+	var MapInterval;
+	function WaitForGMap() {
+		MapInterval = window.setInterval(function() {	
+			if (GoogleMap) {
+				window.clearInterval(MapInterval);
+				console.log(GoogleMap);
+				LoadMapEvents();
+			}
+		}, 100);
+	}
+	WaitForGMap();
+	//alert(map_options.center);
+>>>>>>> d247efd2c6111073cf97f628afc17e5d619bd55a
 // TODO: MAP CENTERING
 
 	GoogleMap = new google.maps.Map(map_canvas, map_options);
@@ -99,6 +193,7 @@ var initialize = function() {
 			marker.setMap(map);
 		}
 		*/
+	function LoadMapEvents() {
 	console.log("Revent Count (init): " + CurrentEvents.find().count());
 	CurrentEvents.find({}).forEach(function(_event) {
 		console.log("Event: " + _event.name);
@@ -107,9 +202,13 @@ var initialize = function() {
 		marker.setTitle(_event.name);
 		marker.setIcon(defaultMarkerSymbol);
 		google.maps.event.addListener(marker, 'click', function() {
+			var theMarker
 			if (selectedMarker)
 				selectedMarker.setIcon(defaultMarkerSymbol);
+				//theMarker = _.clone(defaultMarkerSymbol);
 			selectedMarker = marker;
+			//theMarker = _.clone(selectedMarkerSymbol)
+			//theMarker.scale = 8 + Math.sqrt(_event.attendees.length);
 			selectedMarker.setIcon(selectedMarkerSymbol);
 			Session.set("selected", _event._id);
 		});
@@ -124,6 +223,7 @@ var initialize = function() {
 		var coords = mouse.latLng
 		openCreateDialog(coords.lat(), coords.lng());
 	});
+	}; // LoadMapEvents
 	//}, 100);
 }
 /*var openCreateDialog = function(x, y) {
@@ -146,10 +246,20 @@ var getMarker = function(x, y) {
 Meteor.subscribe("directory");
 Meteor.subscribe("current_events", initialize);
 Meteor.subscribe("past_events");
+<<<<<<< HEAD
 Meteor.subscribe("facebook_info");
 Meteor.subscribe("friends");
+=======
+
+
+
+>>>>>>> d247efd2c6111073cf97f628afc17e5d619bd55a
 
 Template.map.rendered = initialize;
+}; // LOAD
+
+	
+//Template.map.rendered = initialize;
 /*
 	Allows access to the facebook information
 */
@@ -159,11 +269,13 @@ Template.map.rendered = initialize;
 	}
 });*/
 Meteor.startup(function() {
+	Session.set("event-type", "current");
 	Deps.autorun(function() {
 		var selected = Session.get("selected");
 		if (selected && ! CurrentEvents.findOne(selected)) {
 			Session.set("selected", null);
 		}
+	
 	});
 });
 
@@ -238,7 +350,18 @@ Template.details.events({
 
 /* Current Events */
 Template.event_list.event_list = function() {
-    return CurrentEvents.find();
+	// Condition here to grab either past or current events
+	if (Session.get("event-type") == "current") {
+		return CurrentEvents.find(); // current events
+	} else {
+		console.log("User Id: " + Meteor.userId());
+		var pastEvents = PastEvents.findOne({user: Meteor.userId()});
+		if (pastEvents) {
+			return CurrentEvents.find({_id: {$in: pastEvents.events}}); // find events that are in past events array
+		} else {
+			return CurrentEvents.find("Empty"); // No past events (no event will have an _id of 'Empty'
+		}
+	}
 };
 
 /* Past Events */
@@ -248,7 +371,6 @@ Template.event_list.event_list_past = function() {
 
 Template.event_list.rendered = function() {
 	$('#event-list').listview('refresh');
-	$('#epanel').height( $('#footer').innerHeight() - 2 * $('#footer-nav').innerHeight() - 20 );
 	$('.event-item').click(function() {
 		Session.set("selected", $(this).attr('name'));
 	});
@@ -307,9 +429,11 @@ Template.account_tab.friendListFinal = function() {
 
 
 /*LEVIS CODE GOES HERE*/
+
 Template.account_tab.events =  {
 	'click .set': function () {
-	
+	if(counter == 0){			
+		Meteor.subscribe("facebook_info");	
 		var first = Meteor.user().services.facebook.first_name;
 		var last = Meteor.user().services.facebook.last_name;
 		var email = Meteor.user().services.facebook.email;
@@ -318,6 +442,10 @@ Template.account_tab.events =  {
 		var id = Meteor.user().services.facebook.id;
 		myPerson = new person(first, last, email, 8675309, gender, locale, id);
 
+		var img = document.getElementById("prof");
+		img.src = "http://graph.facebook.com/" + id + "/picture/?type=large";
+		counter++;
+	}
 		document.getElementById("outputfirst").innerHTML = myPerson.firstname;
 		document.getElementById("outputlast").innerHTML = myPerson.lastname;
 		document.getElementById("outputemail").innerHTML = myPerson.email;
@@ -457,6 +585,12 @@ Template.footer.events({
 	}
 });
 
+Template.footer.rendered = function() {
+	$('#epanel').height( $('#footer').innerHeight() - 2 * $('#footer-nav').innerHeight() - 20 );
+	$('#apanel').height( $('#footer').innerHeight() - 2 * $('#footer-nav').innerHeight() - 20 );
+	$('#ppanel').height( $('#footer').innerHeight() - 2 * $('#footer-nav').innerHeight() - 20 );
+};
+
 
 ////////////////////////////////////
 // Attendance
@@ -582,19 +716,21 @@ window.onload = function() {
 	});
 	$( "#past-current" ).click(function() {
 		
-	    /*
+	    
 	    if (Session.get("event-type") == "current") {
 			Session.set("event-type", "past");
+			$( '#past-current' ).text("View Current Events");
 			alert("Switched to past events display (not implemented)");
 		} else {
 			Session.set("event-type", "current");
+			$( '#past-current' ).text("View Past Events");
 			alert("Switched to current events display (not implemented)");
-		}*/
+		}
 
 	    
 		//alert("TODO: implement past events");
 	   //go throught all the events in current event list, if attendies is == 0 add it to past event list
-
+/*
 	    console.log("Searching for events....");
 	    var eventID;
 
@@ -627,6 +763,7 @@ window.onload = function() {
 	    //remove this event from current event list
 	    //console.log(eventID);
 
+	*/
 	});
 };
 
@@ -676,7 +813,6 @@ Template.createDialog.events({
 Template.createDialog.error = function() {
 	return Session.get("createError");
 };
-
 //
 
 

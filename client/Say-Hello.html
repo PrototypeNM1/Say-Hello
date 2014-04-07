@@ -203,7 +203,7 @@
 			<a href="#" class="link" id="shareContact">
 
 
-			  <!-------- Share Contact Info ------>
+			  <!-- Share Contact Info -->
 				<img title="Share Details with this Person" src="link.png" height="32px" width="32px" alt="Share Details with this Person" />
 				
 			</a>
@@ -244,19 +244,26 @@
 	<div data-role="tabs" id="footer-tabs">
 	<div data-role="navbar" id="footer-nav">
 		<ul>
-			<li><a href="#epanel" data-href="epanel" class="ui-btn-active"><h3>Events</h3></a></li>
-			<li><a href="#ppanel" data-href="ppanel"><h3>People</h3></a></li>
-			<li><a href="#apanel" data-href="apanel"><h3>Account</h3></a></li>
+			<li><a href="#epanel" data-href="epanel" class="ui-btn-active"><h2>Events</h2></a></li>
+			<li><a href="#ppanel" data-href="ppanel"><h2>People</h2></a></li>
+			<li><a href="#apanel" data-href="apanel"><h2>Account</h2></a></li>
 		</ul>
 	</div><!-- /navbar -->
 	<div id="epanel" class="ui-content" style="overflow-y: auto;">
+  <ul id="event-list" data-role="listview" data-inset="true">
+    <li><a href="#" id="create">Create New Event</a></li>
+ 
 		{{> event_list}}
+    <li><a href="#" id="moar">Load more ...</a></li>
+        <li><a href="#" id="past-current">View Past Events</a></li>
+    
+  </ul>
 	</div>
 	
-	<div id="ppanel" class="ui-content">
+	<div id="ppanel" class="ui-content" style="overflow-y: auto;">
 		{{> people_tab}}
 	</div>
-	<div id="apanel" class="ui-content">
+	<div id="apanel" class="ui-content" style="overflow-y: auto;">
 		{{> account_tab}}
 	</div>
 	</div>
@@ -264,10 +271,9 @@
 
 <template name="event_list">
   <!--input type="button" class="ui-btn new-event" value="Create New Event" / -->
-  {{#if event_list}} 
-  <ul id="event-list" data-role="listview" data-inset="true">
-    <li><a href="#" id="create">Create New Event</a></li>
+ {{#if event_list}} 
     {{#each event_list}}
+<<<<<<< HEAD
     
     <li><a href="#" class="event-item" name="{{_id}}">{{name}}</a></li>
     
@@ -287,17 +293,11 @@
     
     <li><a href="#" class="event-item" name="{{_id}}">{{name}}</a></li>
     
+=======
+        <li><a href="#" class="event-item" name="{{_id}}" data-theme="a">{{name}}</a></li>
+>>>>>>> d247efd2c6111073cf97f628afc17e5d619bd55a
     {{/each}}
-
-  </ul>
-
-  <script>
-    $('#event-list').listview('refresh');
-  </script>
-
   {{/if}}
-
-
 </template>
 
 <template name="people_tab">
@@ -305,35 +305,38 @@
 </template>
 
 <template name="account_tab">
-	<h1>Profile</h2>
+	<h2>Profile</h2>
+	<div>
+	<img id="prof" src="">
+	</div>
+	<div>
 	<label for="firstname">First Name:</label>
-	<input type="text" id="changefirst" style="display:none">
-	<label for="outputfirstname" id="outputfirst" style="display:inline"></label>
-	<br>
+	<input type="text" id="changefirst" style="display:none" />
+	<label for="outputfirstname" id="outputfirst"></label>
+	</div>
+	<div>
 	<label for="lastname">Last Name:</label>
 	<input type="text" id="changelast" style="display:none">
 	<label for="outputlastname" id="outputlast" style="display:inline"></label>
-	<br>
+	</div>
+	<div>
 	<label for="email">Email:</label>
 	<input type="text" id="changeemail" style="display:none">
 	<label for="outputemail" id="outputemail" style="display:inline"></label>
-	<br>
+	</div>
+	<div>
 	<label for="phone">Phone Number:</label>
 	<input type="text" id="changephone" style="display:none">
 	<label for="outputphone" id="outputphone" style="display:inline"></label>
-	<br>
+	</div>
+	<div>
 	<label for="gender">Gender:</label>
 	<input type="text" id="changegender" style="display:none">
 	<label for="outputgender" id="outputgender" style="display:inline"></label>
-	<br>
-	<div>
+	</div>
+	<div data-inline="true">
 	<input type="button" class="save" value="Save" style="display:inline" />
-	</div>
-	<div>
 	<input type="button" class="set" value="Get Info" style="display:inline" />
-	</div>
-	<br>
-	<div>
 	<input type="button" class="edit" value="Edit" style="display:inline"/>
 	</div>
 

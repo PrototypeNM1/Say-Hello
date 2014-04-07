@@ -2,13 +2,38 @@
 
 
 // Say Hello - client
+// Wait for google maps api to load
+//alert('test');
+var loaded = false;
+var lint;
+$(document).ready(function() { loaded = true; });
+lint = window.setInterval(function() {
+	console.log('------');
+	if (google) {
+		console.log('google exists');
+		if (google.maps) { //google.maps.SymbolPath.CIRCLE
+			console.log('google.maps exists');
+			if (google.maps.SymbolPath) {
+				console.log('google.maps.SymbolPath exists');
+				if (google.maps.SymbolPath.CIRCLE === 0) {
+					console.log('google.maps.SymbolPath.CIRCLE exists');
+					window.clearInterval(lint);
+					LOAD();
+				}
+			}
+		}
+	}
+}, 1000);
+
+
+function LOAD()
+{
+
 var defaultMarkerSymbol;
 var selectedMarkerSymbol;
 var selectedMarker;
 var GoogleMap;
 var myPerson;
-
-
 
 
 /*
@@ -87,25 +112,38 @@ var initialize = function() {
 			},
 			{timeout: 30000, enableHighAccuracy: true, maximumAge: 75000}
 		);
+	} else {
+		var map_canvas = document.getElementById("map_canvas");
+		var map_options = {
+			center: new google.maps.LatLng(40.4319, -86.9202),
+			zoom: 16,
+			scrollwheel: false,
+			disableDoubleClickZoom: true,
+			streetViewControl: false,
+			disableDefaultUI: true,
+			zoomControl: true,
+			//mapMaker: true
+			mapTypeId: google.maps.MapTypeId.HYBRID,
+			styles: [{
+				featureType: "poi",
+				elementType: "label",
+				stylers: [{ visibility: "off" }]
+			}]
+		}
+		GoogleMap = new google.maps.Map(map_canvas, map_options);
 	}
-	var map_canvas = document.getElementById("map_canvas");
-	var map_options = {
-		center: new google.maps.LatLng(40.4319, -86.9202),
-		zoom: 16,
-		scrollwheel: false,
-		disableDoubleClickZoom: true,
-		streetViewControl: false,
-		disableDefaultUI: true,
-		zoomControl: true,
-		//mapMaker: true
-		mapTypeId: google.maps.MapTypeId.HYBRID,
-		styles: [{
-			featureType: "poi",
-			elementType: "label",
-			stylers: [{ visibility: "off" }]
-		}]
+
+	var MapInterval;
+	function WaitForGMap() {
+		MapInterval = window.setInterval(function() {	
+			if (GoogleMap) {
+				window.clearInterval(MapInterval);
+				console.log(GoogleMap);
+				LoadMapEvents();
+			}
+		}, 100);
 	}
-	GoogleMap = new google.maps.Map(map_canvas, map_options);
+	WaitForGMap();
 	//alert(map_options.center);
 // TODO: MAP CENTERING
 
@@ -119,6 +157,7 @@ var initialize = function() {
 			marker.setMap(map);
 		}
 		*/
+	function LoadMapEvents() {
 	console.log("Revent Count (init): " + CurrentEvents.find().count());
 	CurrentEvents.find({}).forEach(function(_event) {
 		console.log("Event: " + _event.name);
@@ -127,9 +166,13 @@ var initialize = function() {
 		marker.setTitle(_event.name);
 		marker.setIcon(defaultMarkerSymbol);
 		google.maps.event.addListener(marker, 'click', function() {
+			var theMarker
 			if (selectedMarker)
 				selectedMarker.setIcon(defaultMarkerSymbol);
+				//theMarker = _.clone(defaultMarkerSymbol);
 			selectedMarker = marker;
+			//theMarker = _.clone(selectedMarkerSymbol)
+			//theMarker.scale = 8 + Math.sqrt(_event.attendees.length);
 			selectedMarker.setIcon(selectedMarkerSymbol);
 			Session.set("selected", _event._id);
 		});
@@ -144,6 +187,7 @@ var initialize = function() {
 		var coords = mouse.latLng
 		openCreateDialog(coords.lat(), coords.lng());
 	});
+	}; // LoadMapEvents
 	//}, 100);
 }
 /*var openCreateDialog = function(x, y) {
@@ -168,7 +212,8 @@ Meteor.subscribe("current_events", initialize);
 Meteor.subscribe("past_events");
 Meteor.subscribe("facebook_info");
 
-Template.map.rendered = initialize;
+}; // LOAD
+//Template.map.rendered = initialize;
 /*
 	Allows access to the facebook information
 */
@@ -178,6 +223,7 @@ Template.map.rendered = initialize;
 	}
 });*/
 Meteor.startup(function() {
+	Session.set("event-type", "current");
 	Deps.autorun(function() {
 		var selected = Session.get("selected");
 		if (selected && ! CurrentEvents.findOne(selected)) {
@@ -257,7 +303,18 @@ Template.details.events({
 
 /* Current Events */
 Template.event_list.event_list = function() {
-    return CurrentEvents.find();
+	// Condition here to grab either past or current events
+	if (Session.get("event-type") == "current") {
+		return CurrentEvents.find(); // current events
+	} else {
+		console.log("User Id: " + Meteor.userId());
+		var pastEvents = PastEvents.findOne({user: Meteor.userId()});
+		if (pastEvents) {
+			return CurrentEvents.find({_id: {$in: pastEvents.events}}); // find events that are in past events array
+		} else {
+			return CurrentEvents.find("Empty"); // No past events (no event will have an _id of 'Empty'
+		}
+	}
 };
 
 /* Past Events */
@@ -267,7 +324,6 @@ Template.event_list.event_list_past = function() {
 
 Template.event_list.rendered = function() {
 	$('#event-list').listview('refresh');
-	$('#epanel').height( $('#footer').innerHeight() - 2 * $('#footer-nav').innerHeight() - 20 );
 	$('.event-item').click(function() {
 		Session.set("selected", $(this).attr('name'));
 	});
@@ -369,6 +425,12 @@ Template.footer.events({
 		});
 	}
 });
+
+Template.footer.rendered = function() {
+	$('#epanel').height( $('#footer').innerHeight() - 2 * $('#footer-nav').innerHeight() - 20 );
+	$('#apanel').height( $('#footer').innerHeight() - 2 * $('#footer-nav').innerHeight() - 20 );
+	$('#ppanel').height( $('#footer').innerHeight() - 2 * $('#footer-nav').innerHeight() - 20 );
+};
 
 
 ////////////////////////////////////
@@ -495,19 +557,21 @@ window.onload = function() {
 	});
 	$( "#past-current" ).click(function() {
 		
-	    /*
+	    
 	    if (Session.get("event-type") == "current") {
 			Session.set("event-type", "past");
+			$( '#past-current' ).text("View Current Events");
 			alert("Switched to past events display (not implemented)");
 		} else {
 			Session.set("event-type", "current");
+			$( '#past-current' ).text("View Past Events");
 			alert("Switched to current events display (not implemented)");
-		}*/
+		}
 
 	    
 		//alert("TODO: implement past events");
 	   //go throught all the events in current event list, if attendies is == 0 add it to past event list
-
+/*
 	    console.log("Searching for events....");
 	    var eventID;
 
@@ -540,6 +604,7 @@ window.onload = function() {
 	    //remove this event from current event list
 	    //console.log(eventID);
 
+	*/
 	});
 };
 
@@ -589,5 +654,4 @@ Template.createDialog.events({
 Template.createDialog.error = function() {
 	return Session.get("createError");
 };
-
 //

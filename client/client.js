@@ -2,14 +2,39 @@
 
 
 // Say Hello - client
+// Wait for google maps api to load
+//alert('test');
+var loaded = false;
+var lint;
+$(document).ready(function() { loaded = true; });
+lint = window.setInterval(function() {
+	console.log('------');
+	if (google) {
+		console.log('google exists');
+		if (google.maps) { //google.maps.SymbolPath.CIRCLE
+			console.log('google.maps exists');
+			if (google.maps.SymbolPath) {
+				console.log('google.maps.SymbolPath exists');
+				if (google.maps.SymbolPath.CIRCLE === 0) {
+					console.log('google.maps.SymbolPath.CIRCLE exists');
+					window.clearInterval(lint);
+					LOAD();
+				}
+			}
+		}
+	}
+}, 1000);
+
+
+function LOAD()
+{
+
 var defaultMarkerSymbol;
 var selectedMarkerSymbol;
 var selectedMarker;
 var GoogleMap;
 var myPerson;
-
-
-
+}
 
 /*
 	Constructor for the person object
@@ -58,37 +83,70 @@ var initialize = function() {
 	};
 	//init_stuff = window.setInterval(function() {
 	//window.clearInterval(init_stuff);
-	var map_canvas = document.getElementById("map_canvas");
-	var map_options = {
-		center: new google.maps.LatLng(40.4319, -86.9202),
-		zoom: 16,
-		scrollwheel: false,
-		disableDoubleClickZoom: true,
-		streetViewControl: false,
-		disableDefaultUI: true,
-		zoomControl: true,
-		//mapMaker: true
-		mapTypeId: google.maps.MapTypeId.HYBRID,
-		styles: [{
-			featureType: "poi",
-			elementType: "label",
-			stylers: [{ visibility: "off" }]
-		}]
-	}
 
-// TODO: MAP CENTERING
 	if (navigator.geolocation) {
-		navigator.geolocation.getCurrentPosition(function(pos) {
-			var coords = pos.coords;
-			alert("Current location: " + coords.latitude + ", " + coords.longitude);
-			map_options.center = new google.maps.LatLng(coords.latitude, coords.longitude);
-	//		alert(map_options.center);
-		});
+		navigator.geolocation.getCurrentPosition(
+			function(pos) {
+				var coords = pos.coords;
+				var map_canvas = document.getElementById("map_canvas");
+				var map_options = {
+					center: new google.maps.LatLng(coords.latitude, coords.longitude),
+					zoom: 16,
+					scrollwheel: false,
+					disableDoubleClickZoom: true,
+					streetViewControl: false,
+					disableDefaultUI: true,
+					zoomControl: true,
+					//mapMaker: true
+					mapTypeId: google.maps.MapTypeId.HYBRID,
+					styles: [{
+						featureType: "poi",
+						elementType: "label",
+						stylers: [{ visibility: "off" }]
+					}]
+				}
+				GoogleMap = new google.maps.Map(map_canvas, map_options);
+				//alert(map_options.center);
+			},
+			function(err) {
+			},
+			{timeout: 30000, enableHighAccuracy: true, maximumAge: 75000}
+		);
+	} else {
+		var map_canvas = document.getElementById("map_canvas");
+		var map_options = {
+			center: new google.maps.LatLng(40.4319, -86.9202),
+			zoom: 16,
+			scrollwheel: false,
+			disableDoubleClickZoom: true,
+			streetViewControl: false,
+			disableDefaultUI: true,
+			zoomControl: true,
+			//mapMaker: true
+			mapTypeId: google.maps.MapTypeId.HYBRID,
+			styles: [{
+				featureType: "poi",
+				elementType: "label",
+				stylers: [{ visibility: "off" }]
+			}]
+		}
+		GoogleMap = new google.maps.Map(map_canvas, map_options);
 	}
-	alert(map_options.center);
+
+	var MapInterval;
+	function WaitForGMap() {
+		MapInterval = window.setInterval(function() {	
+			if (GoogleMap) {
+				window.clearInterval(MapInterval);
+				console.log(GoogleMap);
+				LoadMapEvents();
+			}
+		}, 100);
+	}
+	WaitForGMap();
+	//alert(map_options.center);
 // TODO: MAP CENTERING
 
-	GoogleMap = new google.maps.Map(map_canvas, map_options);
 	//google.maps.event.addListener(map, 'idle', function() {
 		// generate markers
 	//	alert("Google Map Loaded.");
@@ -99,6 +157,7 @@ var initialize = function() {
 			marker.setMap(map);
 		}
 		*/
+	function LoadMapEvents() {
 	console.log("Revent Count (init): " + CurrentEvents.find().count());
 	CurrentEvents.find({}).forEach(function(_event) {
 		console.log("Event: " + _event.name);
@@ -107,9 +166,13 @@ var initialize = function() {
 		marker.setTitle(_event.name);
 		marker.setIcon(defaultMarkerSymbol);
 		google.maps.event.addListener(marker, 'click', function() {
+			var theMarker
 			if (selectedMarker)
 				selectedMarker.setIcon(defaultMarkerSymbol);
+				//theMarker = _.clone(defaultMarkerSymbol);
 			selectedMarker = marker;
+			//theMarker = _.clone(selectedMarkerSymbol)
+			//theMarker.scale = 8 + Math.sqrt(_event.attendees.length);
 			selectedMarker.setIcon(selectedMarkerSymbol);
 			Session.set("selected", _event._id);
 		});
@@ -124,6 +187,7 @@ var initialize = function() {
 		var coords = mouse.latLng
 		openCreateDialog(coords.lat(), coords.lng());
 	});
+	}; // LoadMapEvents
 	//}, 100);
 }
 /*var openCreateDialog = function(x, y) {
@@ -148,9 +212,14 @@ Meteor.subscribe("current_events", initialize);
 Meteor.subscribe("past_events");
 Meteor.subscribe("facebook_info");
 
+<<<<<<< HEAD
 
 
 Template.map.rendered = initialize;
+=======
+}; // LOAD
+//Template.map.rendered = initialize;
+>>>>>>> cea4dec76d69334ea93513f3e7a42cb5fdaa753b
 /*
 	Allows access to the facebook information
 */
@@ -160,6 +229,7 @@ Template.map.rendered = initialize;
 	}
 });*/
 Meteor.startup(function() {
+	Session.set("event-type", "current");
 	Deps.autorun(function() {
 		var selected = Session.get("selected");
 		if (selected && ! CurrentEvents.findOne(selected)) {
@@ -222,6 +292,9 @@ Template.details.events({
 	},
 	'click .sign-out': function() {
 		Meteor.call('sign_', Session.get("selected"), false); // sign out
+	    //Meteor call to check the attendee list
+
+
 		return false;
 	},
 	'click .curLoc': function() {
@@ -235,31 +308,49 @@ Template.details.events({
 	}
 });
 
+/* Current Events */
 Template.event_list.event_list = function() {
-	return CurrentEvents.find();
+	// Condition here to grab either past or current events
+	if (Session.get("event-type") == "current") {
+		return CurrentEvents.find(); // current events
+	} else {
+		console.log("User Id: " + Meteor.userId());
+		var pastEvents = PastEvents.findOne({user: Meteor.userId()});
+		if (pastEvents) {
+			return CurrentEvents.find({_id: {$in: pastEvents.events}}); // find events that are in past events array
+		} else {
+			return CurrentEvents.find("Empty"); // No past events (no event will have an _id of 'Empty'
+		}
+	}
 };
+
+/* Past Events */
+Template.event_list.event_list_past = function() {
+    return PastEvents.find(); 
+}
 
 Template.event_list.rendered = function() {
 	$('#event-list').listview('refresh');
-	$('#epanel').height( $('#footer').innerHeight() - 2 * $('#footer-nav').innerHeight() - 20 );
 	$('.event-item').click(function() {
 		Session.set("selected", $(this).attr('name'));
 	});
 };
+
+
 
 /*LEVIS CODE GOES HERE*/
 
 Template.account_tab.events =  {
 	'click .set': function () {
 	
-/*		var first = Meteor.user().services.facebook.first_name;
-var last = Meteor.user().services.facebook.last_name;
-var email = Meteor.user().services.facebook.email;
-var gender = Meteor.user().services.facebook.gender;
-var locale = Meteor.user().services.facebook.locale;
-var id = Meteor.user().services.facebook.id;
-myPerson = new person(first, last, email, 8675309, gender, locale, id);	
-*/
+		var first = Meteor.user().services.facebook.first_name;
+		var last = Meteor.user().services.facebook.last_name;
+		var email = Meteor.user().services.facebook.email;
+		var gender = Meteor.user().services.facebook.gender;
+		var locale = Meteor.user().services.facebook.locale;
+		var id = Meteor.user().services.facebook.id;
+		myPerson = new person(first, last, email, 8675309, gender, locale, id);	
+
 		document.getElementById("outputfirst").innerHTML = myPerson.firstname;
 		document.getElementById("outputlast").innerHTML = myPerson.lastname;
 		document.getElementById("outputemail").innerHTML = myPerson.email;
@@ -342,6 +433,12 @@ Template.footer.events({
 		});
 	}
 });
+
+Template.footer.rendered = function() {
+	$('#epanel').height( $('#footer').innerHeight() - 2 * $('#footer-nav').innerHeight() - 20 );
+	$('#apanel').height( $('#footer').innerHeight() - 2 * $('#footer-nav').innerHeight() - 20 );
+	$('#ppanel').height( $('#footer').innerHeight() - 2 * $('#footer-nav').innerHeight() - 20 );
+};
 
 
 ////////////////////////////////////
@@ -467,14 +564,55 @@ window.onload = function() {
 		alert("TODO: load more events (need to limit event view to 5 at a time by default, increase by 5 each time more loads");
 	});
 	$( "#past-current" ).click(function() {
-		if (Session.get("event-type") == "current") {
+		
+	    
+	    if (Session.get("event-type") == "current") {
 			Session.set("event-type", "past");
+			$( '#past-current' ).text("View Current Events");
 			alert("Switched to past events display (not implemented)");
 		} else {
 			Session.set("event-type", "current");
+			$( '#past-current' ).text("View Past Events");
 			alert("Switched to current events display (not implemented)");
 		}
+
+	    
 		//alert("TODO: implement past events");
+	   //go throught all the events in current event list, if attendies is == 0 add it to past event list
+/*
+	    console.log("Searching for events....");
+	    var eventID;
+
+	    CurrentEvents.find({}).forEach(function (_event) {
+		console.log("Event: " + _event.name);
+		console.log("Attendees: " + _event.attendees.length);
+		console.log("Event ID: " + _event._id);
+		if(_event.attendees.length == 0) {
+		    //insert this event in the past event collection
+		    PastEvents.insert({
+			_id: _event._id,
+			owner: _event.owner,
+			name: _event.name,
+			description: _event.description,
+			x: _event.x,
+			y: _event.y,
+			attendees: _event.attendees
+		    });
+		    //var eventID = _event._id;
+		    //remove this event
+		    console.log("Removed event id: " + _event._id);
+		    CurrentEvents.remove({_id: _event._id});
+		    
+		}
+		
+
+		//make a dialog for viewing details of this past event
+		// already done by Derek.
+	    });
+	    //remove this event from current event list
+	    //console.log(eventID);
+
+	*/
 	});
 };
 
@@ -524,5 +662,4 @@ Template.createDialog.events({
 Template.createDialog.error = function() {
 	return Session.get("createError");
 };
-
 //

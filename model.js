@@ -3,10 +3,10 @@ CurrentEvents = new Meteor.Collection("current_events")
 PastEvents = new Meteor.Collection("past_events")
 
 CurrentEvents.allow({
-	insert: function(userId, myEvent) {
-		return false; // we want to use CreateEvent
-	},
-	update: function(userId, myEvent, fields, modifier) {
+    insert: function(userId, myEvent) {
+	return false; // we want to use CreateEvent
+    },
+    update: function(userId, myEvent, fields, modifier) {
 		if (userId !== myEvent.owner)
 			return false; // not the owner of the event
 
@@ -17,9 +17,28 @@ CurrentEvents.allow({
 		// and returns a list of differences
 	},
 	remove: function(userId, myEvent) {
-		return false; // cannot remove events from the database
+		return true; // remove events from the database
 	}
 });
+
+/*************** Past Events *********************/
+PastEvents.allow({
+    insert: function(userId, hisEvent) {
+	return true; 
+    },
+    remove: function(userId, hisEvent) {
+	return true; 
+
+	//use RemovePastEvents, to be implemented in next iteration 
+	//there is no absolute past event, it depends on the number of person attending the event
+    }
+});
+
+
+
+
+
+
 
 // get the number of people at the event
 attending = function(myEvent) {
@@ -34,6 +53,10 @@ createEvent = function(options) {
 	// returns A
 	return id;
 };
+
+createPastEvent = function(options) {
+    Meteor.call('createPastEvent', options);
+}
 
 Meteor.methods({ 
 		// list of methods that are to be run ON THE SERVER
@@ -64,6 +87,32 @@ Meteor.methods({
 		});
 		return id;
 	},
+
+    createPastEvent: function(options) {
+
+	/*
+	check(options, {
+	    name: String,
+	    description: String,
+	    _id: String,
+	    x: Number,
+	    y: Number
+	});
+
+	var id = options._id;
+
+
+	//get the id of the events
+	console.log("this.userId: " + this.userId);
+	var uName = displayName(Meteor.users.findOne(this.userId));
+	console.log("Username of creator: " + uName);
+	*/
+	//number of attendies
+	
+	
+
+    },
+    
 	sign_: function(eventId, signing_in) {
 		check(eventId, String);
 		if (! this.userId)
@@ -81,8 +130,9 @@ Meteor.methods({
 		check(updateTable, {
 			name: String
 		});
+		check(this.userId, String);
 		//console.log(typeof updateTable);
-		check(updateTable, Object);
+		//check(updateTable, Object);
 		if (attendIndex === -1) {
 			// Person is not in the event!
 			if (signing_in) {
@@ -91,12 +141,12 @@ Meteor.methods({
 						{$push: {attendees: updateTable}});
 
 				var userPastEvents = PastEvents.findOne({user: this.userId});
-				if (userPastEvent) {
+				if (userPastEvents) {
 					// document exists for past events for this user, insert event
 					console.log("User has past event entry");
-					PastEvents.update({user: this.userId}, {$push: {events: eventId}});
+					PastEvents.update({user: this.userId}, {$addToSet: {events: eventId}});
 				} else {
-					PastEvents.insert({user: this.userId, events: []});
+					PastEvents.insert({user: this.userId, events: [eventId]});
 					console.log("User did not have past event entry. Created new");
 				}
 			} else {

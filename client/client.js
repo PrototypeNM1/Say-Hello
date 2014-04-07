@@ -331,7 +331,7 @@ Template.event_list.rendered = function() {
 
 
 
-/*LEVIS CODE GOES HERE*/
+/*Account Info of User Object */
 Template.account_tab.events =  {
 	'click .set': function () {
 	

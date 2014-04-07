@@ -6,6 +6,23 @@
 //alert('test');
 var loaded = false;
 var lint;
+var myPerson;
+var counter = 0;
+
+/*
+	Constructor for the person object
+	Holds person's information
+*/
+function person(firstname, lastname, email, phoneNumber, gender, loc, idNum)
+{
+	this.firstname = firstname;
+	this.lastname = lastname;
+	this.email = email;
+	this.phoneNumber = phoneNumber;
+	this.gender = gender;
+	this.loc = loc;
+	this.idNum = idNum;
+}
 $(document).ready(function() { loaded = true; });
 lint = window.setInterval(function() {
 	console.log('------');
@@ -33,23 +50,10 @@ var defaultMarkerSymbol;
 var selectedMarkerSymbol;
 var selectedMarker;
 var GoogleMap;
-var myPerson;
-}
 
-/*
-	Constructor for the person object
-	Holds person's information
-*/
-function person(firstname, lastname, email, phoneNumber, gender, loc, idNum)
-{
-	this.firstname = firstname;
-	this.lastname = lastname;
-	this.email = email;
-	this.phoneNumber = phoneNumber;
-	this.gender = gender;
-	this.loc = loc;
-	this.idNum = idNum;
-}
+
+
+
 
 
 /*
@@ -210,16 +214,15 @@ var getMarker = function(x, y) {
 Meteor.subscribe("directory");
 Meteor.subscribe("current_events", initialize);
 Meteor.subscribe("past_events");
-Meteor.subscribe("facebook_info");
 
-<<<<<<< HEAD
+
 
 
 Template.map.rendered = initialize;
-=======
 }; // LOAD
+
+	
 //Template.map.rendered = initialize;
->>>>>>> cea4dec76d69334ea93513f3e7a42cb5fdaa753b
 /*
 	Allows access to the facebook information
 */
@@ -342,15 +345,20 @@ Template.event_list.rendered = function() {
 
 Template.account_tab.events =  {
 	'click .set': function () {
-	
+	if(counter == 0){			
+		Meteor.subscribe("facebook_info");	
 		var first = Meteor.user().services.facebook.first_name;
 		var last = Meteor.user().services.facebook.last_name;
 		var email = Meteor.user().services.facebook.email;
 		var gender = Meteor.user().services.facebook.gender;
 		var locale = Meteor.user().services.facebook.locale;
 		var id = Meteor.user().services.facebook.id;
-		myPerson = new person(first, last, email, 8675309, gender, locale, id);	
+		myPerson = new person(first, last, email, 8675309, gender, locale, id);
 
+		var img = document.getElementById("prof");
+		img.src = "http://graph.facebook.com/" + id + "/picture/?type=large";
+		counter++;
+	}
 		document.getElementById("outputfirst").innerHTML = myPerson.firstname;
 		document.getElementById("outputlast").innerHTML = myPerson.lastname;
 		document.getElementById("outputemail").innerHTML = myPerson.email;

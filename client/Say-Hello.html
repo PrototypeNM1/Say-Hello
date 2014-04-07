@@ -283,34 +283,37 @@
 
 <template name="account_tab">
 	<h2>Profile</h2>
+	<div>
+	<img id="prof" src="">
+	</div>
+	<div>
 	<label for="firstname">First Name:</label>
-	<input type="text" id="changefirst" style="display:none">
-	<label for="outputfirstname" id="outputfirst" style="display:inline"></label>
-	<br>
+	<input type="text" id="changefirst" style="display:none" />
+	<label for="outputfirstname" id="outputfirst"></label>
+	</div>
+	<div>
 	<label for="lastname">Last Name:</label>
 	<input type="text" id="changelast" style="display:none">
 	<label for="outputlastname" id="outputlast" style="display:inline"></label>
-	<br>
+	</div>
+	<div>
 	<label for="email">Email:</label>
 	<input type="text" id="changeemail" style="display:none">
 	<label for="outputemail" id="outputemail" style="display:inline"></label>
-	<br>
+	</div>
+	<div>
 	<label for="phone">Phone Number:</label>
 	<input type="text" id="changephone" style="display:none">
 	<label for="outputphone" id="outputphone" style="display:inline"></label>
-	<br>
+	</div>
+	<div>
 	<label for="gender">Gender:</label>
 	<input type="text" id="changegender" style="display:none">
 	<label for="outputgender" id="outputgender" style="display:inline"></label>
-	<br>
-	<div>
+	</div>
+	<div data-inline="true">
 	<input type="button" class="save" value="Save" style="display:inline" />
-	</div>
-	<div>
 	<input type="button" class="set" value="Get Info" style="display:inline" />
-	</div>
-	<br>
-	<div>
 	<input type="button" class="edit" value="Edit" style="display:inline"/>
 	</div>
 	

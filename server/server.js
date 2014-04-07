@@ -1,5 +1,6 @@
-// Say Hello - server
-
+/*
+ Say Hello - server
+/*
 
 /*
 	This uses the accessToken from the Facebook login widget to gain access 
@@ -30,7 +31,9 @@ Accounts.onCreateUser(function(options, user) {
 	unless the server publishes the information
 */
 Meteor.publish("facebook_info", function() { 
-	return Meteor.users.find({_id: this.userId}, {fields: {'services.facebook.email': 1,
+	return Meteor.users.find({_id: this.userId}, {fields: {'services.facebook.first_name': 1,
+								'services.facebook.last_name': 1,
+								'services.facebook.email': 1,
 								'services.facebook.gender': 1,
 								'services.facebook.locale': 1,
 								'services.facebook.id': 1}}); 

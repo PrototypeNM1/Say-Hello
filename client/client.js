@@ -87,7 +87,11 @@ var initialize = function() {
 	};
 	//init_stuff = window.setInterval(function() {
 	//window.clearInterval(init_stuff);
+<<<<<<< HEAD
 
+=======
+<<<<<<< HEAD
+>>>>>>> 92567ea8be467ab929f7b38707e39ef049033cba
 	var map_canvas = document.getElementById("map_canvas");
 	var map_options = {
 		center: new google.maps.LatLng(40.4319, -86.9202),
@@ -116,7 +120,11 @@ var initialize = function() {
 		});
 	}
 	alert(map_options.center);
+<<<<<<< HEAD
 
+=======
+=======
+>>>>>>> 92567ea8be467ab929f7b38707e39ef049033cba
 
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(
@@ -179,7 +187,11 @@ var initialize = function() {
 	}
 	WaitForGMap();
 	//alert(map_options.center);
+<<<<<<< HEAD
 
+=======
+>>>>>>> d247efd2c6111073cf97f628afc17e5d619bd55a
+>>>>>>> 92567ea8be467ab929f7b38707e39ef049033cba
 // TODO: MAP CENTERING
 
 	GoogleMap = new google.maps.Map(map_canvas, map_options);
@@ -246,9 +258,19 @@ var getMarker = function(x, y) {
 Meteor.subscribe("directory");
 Meteor.subscribe("current_events", initialize);
 Meteor.subscribe("past_events");
+<<<<<<< HEAD
 
 //Meteor.subscribe("facebook_info");
+=======
+<<<<<<< HEAD
+Meteor.subscribe("facebook_info");
+>>>>>>> 92567ea8be467ab929f7b38707e39ef049033cba
 Meteor.subscribe("friends");
+=======
+
+
+
+>>>>>>> d247efd2c6111073cf97f628afc17e5d619bd55a
 
 
 
@@ -378,6 +400,9 @@ Template.event_list.rendered = function() {
 
 
 
+<<<<<<< HEAD
+/*Account Info of User Object */
+=======
 /*
 
 
@@ -442,6 +467,10 @@ Template.account_tab.friendListFinal = function() {
 
 /*LEVIS CODE GOES HERE*/
 
+<<<<<<< HEAD
+=======
+>>>>>>> def02d89fca891c5006aaf163f139ea87a3f768d
+>>>>>>> 92567ea8be467ab929f7b38707e39ef049033cba
 Template.account_tab.events =  {
 	'click .set': function () {
 	if(counter == 0){			

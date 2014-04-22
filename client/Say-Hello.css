@@ -73,6 +73,25 @@ input.chosen {
 	overflow: auto;
 	overflow-x: hidden;
 }
+
+div.account_detail{
+	padding:0.1em;
+	margin:0.1em;
+}
+
+div.account_detail span{
+	display: inline;
+	overflow: hidden;
+}
+
+div.account_detail input{
+	display: inline;
+	width: 100%;
+	padding-top:8px;
+	border:none;
+	background:transparent;
+	
+}
 /*
 .panel {
 	height: 100%;

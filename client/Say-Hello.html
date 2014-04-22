@@ -247,7 +247,7 @@
 		<ul>
 			<li><a href="#epanel" data-href="epanel" class="ui-btn-active"><h2>Events</h2></a></li>
 			<li><a href="#ppanel" data-href="ppanel"><h2>People</h2></a></li>
-			<li><a href="#apanel" data-href="apanel"><h2>Account</h2></a></li>
+			<li><a href="#apanel" class="account" data-href="apanel"><h2>Account</h2></a></li>
 		</ul>
 	</div><!-- /navbar -->
 	<div id="epanel" class="ui-content" style="overflow-y: auto;">
@@ -308,38 +308,39 @@
 <template name="account_tab">
 
 	<h2>Profile</h2>
+	
+
 	<div>
-	<img id="prof" src="">
+		<img id="prof" src="">
+		<input type="file" id="choose" style="display:none"/>
 	</div>
+	<div class="account_detail">
+		<span>First Name:</span>
+		<input type="text" id="changefirst"/>
+	</div>
+	<br>
+	<div class="account_detail">
+		<span>Last Name:</span>
+		<input type="text" id="changelast"/>
+	</div>
+	<br>
+	<div class="account_detail">
+		<span>Email:</span>
+		<input type="text" id="changeemail"/>
+	</div>
+	<br>
+	<div class="account_detail">
+		<span>Phone Number:</span>
+		<input type="text" id="changephone"/>
+	</div>
+	<br>
+	<div class="account_detail">
+		<span>Gender:</label>
+		<input type="text" id="changegender"/>
+	</div>
+	<br>
 	<div>
-	<label for="firstname">First Name:</label>
-	<input type="text" id="changefirst" style="display:none" />
-	<label for="outputfirstname" id="outputfirst"></label>
-	</div>
-	<div>
-	<label for="lastname">Last Name:</label>
-	<input type="text" id="changelast" style="display:none">
-	<label for="outputlastname" id="outputlast" style="display:inline"></label>
-	</div>
-	<div>
-	<label for="email">Email:</label>
-	<input type="text" id="changeemail" style="display:none">
-	<label for="outputemail" id="outputemail" style="display:inline"></label>
-	</div>
-	<div>
-	<label for="phone">Phone Number:</label>
-	<input type="text" id="changephone" style="display:none">
-	<label for="outputphone" id="outputphone" style="display:inline"></label>
-	</div>
-	<div>
-	<label for="gender">Gender:</label>
-	<input type="text" id="changegender" style="display:none">
-	<label for="outputgender" id="outputgender" style="display:inline"></label>
-	</div>
-	<div data-inline="true">
-	<input type="button" class="save" value="Save" style="display:inline" />
-	<input type="button" class="set" value="Get Info" style="display:inline" />
-	<input type="button" class="edit" value="Edit" style="display:inline"/>
+		<input type="button" id = "makeChange" class="edit" value="Edit"/>
 	</div>
 	
 	{{#each userInfo}}

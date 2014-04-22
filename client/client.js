@@ -236,6 +236,7 @@ var getMarker = function(x, y) {
 Meteor.subscribe("directory");
 Meteor.subscribe("current_events", initialize);
 Meteor.subscribe("past_events");
+Meteor.subscribe("facebook_info");
 
 //Meteor.subscribe("facebook_info");
 Meteor.subscribe("friends");
@@ -383,7 +384,7 @@ Template.event_list.rendered = function() {
 
 Template.account_tab.events =  {
     //if(Meteor.userId()) {
-	'click .set': function () {
+	/*'click .set': function () {
 	    if(counter == 0){			
 		Meteor.subscribe("facebook_info");	
 		var first = Meteor.user().services.facebook.first_name;
@@ -422,49 +423,40 @@ Template.account_tab.events =  {
 		friendList: [{name: friendName}]
 	    });
 
-},
+},*/	
+	
 	'click .edit': function () {
-		document.getElementById("outputfirst").style.display = 'none';
-		document.getElementById("outputlast").style.display = 'none';
-		document.getElementById("outputemail").style.display = 'none';
-		document.getElementById("outputphone").style.display = 'none';
-		document.getElementById("outputgender").style.display = 'none';	
+                 if(document.getElementById('makeChange').value == "Edit"){
+                         //document.getElementById('makeChange').value = "Save";
+                         document.getElementById('choose').style.display = "inline";
+                         document.getElementById('changefirst').disabled=false;
+                         document.getElementById('changelast').disabled=false;
+                         document.getElementById('changeemail').disabled=false;
+                         document.getElementById('changephone').disabled=false;
+                         document.getElementById('changegender').disabled=false;
+                         $("#makeChange").prop('value', 'Save').button("refresh");
+                 }
+                 else {
+                         var file = document.getElementById("choose").value;
+                         myPerson.firstname = document.getElementById("changefirst").value;
+                         myPerson.lastname = document.getElementById("changelast").value;
+                         myPerson.email = document.getElementById("changeemail").value;
+                         myPerson.phoneNumber = document.getElementById("changephone").value;
+                         myPerson.gender = document.getElementById("changegender").value;
 
-		document.getElementById("changefirst").style.display = 'inline';
-		document.getElementById("changelast").style.display = 'inline';
-		document.getElementById("changeemail").style.display = 'inline';
-		document.getElementById("changephone").style.display = 'inline';
-		document.getElementById("changegender").style.display = 'inline';
 
-		
-},
-	'click .save': function () {
-		
-		document.getElementById("outputfirst").style.display = 'inline';
-		document.getElementById("outputlast").style.display = 'inline';
-		document.getElementById("outputemail").style.display = 'inline';
-		document.getElementById("outputphone").style.display = 'inline';
-		document.getElementById("outputgender").style.display = 'inline';	
 
-		document.getElementById("changefirst").style.display = 'none';
-		document.getElementById("changelast").style.display = 'none';
-		document.getElementById("changeemail").style.display = 'none';
-		document.getElementById("changephone").style.display = 'none';
-		document.getElementById("changegender").style.display = 'none';
+                         document.getElementById('choose').style.display = "none";
+                         document.getElementById('changefirst').disabled=true;
+                         document.getElementById('changelast').disabled=true;
+                         document.getElementById('changeemail').disabled=true;
+                         document.getElementById('changephone').disabled=true;
+                         document.getElementById('changegender').disabled=true;
 
-		myPerson.firstname = document.getElementById("changefirst").value;
-		myPerson.lastname = document.getElementById("changelast").value;
-		myPerson.email = document.getElementById("changeemail").value;
-		myPerson.phoneNumber = document.getElementById("changephone").value;
-		myPerson.gender = document.getElementById("changegender").value;
+                         $("#makeChange").prop('value', 'Edit').button("refresh");
+                 }
 
-		document.getElementById("outputfirst").innerHTML = myPerson.firstname;
-		document.getElementById("outputlast").innerHTML = myPerson.lastname;
-		document.getElementById("outputemail").innerHTML = myPerson.email;
-		document.getElementById("outputphone").innerHTML = myPerson.phoneNumber;
-		document.getElementById("outputgender").innerHTML = myPerson.gender;
-		
-}
+ }
 };
 
 
@@ -534,7 +526,53 @@ Template.footer.events({
 		navigator.geolocation.getCurrentPosition(function(position) {
 			openCreateDialog(position.coords.latitude, position.coords.longitude);
 		});
+	},
+	'click .account': function(){
+		/*Code for loading the account information to the account tab
+		As of now, it 
+		-creates the user object from services.facebook
+		-sets the values of each text field
+		-and disables the text fields
+		*/
+		if(counter == 0){
+			var first = Meteor.user().services.facebook.first_name;
+			var last = Meteor.user().services.facebook.last_name;
+			var email = Meteor.user().services.facebook.email;
+			var gender = Meteor.user().services.facebook.gender;
+			var locale = Meteor.user().services.facebook.locale;
+			var id = Meteor.user().services.facebook.id;
+			myPerson = new person(first, last, email, 8675309, gender, locale, id);
+			
+			counter++;
+			
+		}
+
+		var img = document.getElementById("prof");
+		img.src = "http://graph.facebook.com/" + myPerson.idNum + "/picture/?type=large";
+		document.getElementById('changefirst').disabled=true;
+		document.getElementById('changelast').disabled=true;
+		document.getElementById('changeemail').disabled=true;
+		document.getElementById('changephone').disabled=true;
+		document.getElementById('changegender').disabled=true;
+
+		document.getElementById('changefirst').value = myPerson.firstname;
+		document.getElementById('changelast').value = myPerson.lastname;
+		document.getElementById('changeemail').value = myPerson.email;
+		document.getElementById('changephone').value = myPerson.phoneNumber;
+		document.getElementById('changegender').value = myPerson.gender;
+
+		friendName = "null"; //null at this time
+	    	///These need to be stored in friend list at time of sign in
+	    	Friends.insert({
+			myEmail: email,
+			firstName: first,
+			lastName: last,
+			myGender: gender,
+			myId: id,
+			friendList: [{name: friendName}]
+	    	});
 	}
+	
 });
 
 Template.footer.rendered = function() {

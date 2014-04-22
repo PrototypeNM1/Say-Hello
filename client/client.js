@@ -56,16 +56,6 @@ var GoogleMap;
 
 
 
-/*
-	Allows access to the facebook information
-*/
-Accounts.ui.config({
-	requestPermissions: {
-		facebook: [ 'bio', 'email']
-	}
-});
-
-
 
 
 var initialize = function() {

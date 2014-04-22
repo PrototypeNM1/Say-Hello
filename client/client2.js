@@ -51,8 +51,8 @@ Template.account_tab.friendListFinal = function() {
 /* autp set of user info with login, friends contain the databse of user */
 Template.account_tab.userInfo = function() {
 
-    if(Methor.userId()) {
-
+    //if(Method.userId()) {
+    /*
 	Meteor.subscribe("facebook_info");	
 	var first = Meteor.user().services.facebook.first_name;
 	var last = Meteor.user().services.facebook.last_name;
@@ -90,8 +90,8 @@ Template.account_tab.userInfo = function() {
 	    myId: id,
 	    friendList: [{name: friendName}]
 	});
-	
+	*/
 	return null;
-    }
+    //}
 
 }

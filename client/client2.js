@@ -4,15 +4,22 @@ Meteor.subscribe("friends");
 /* Send data from friends list */
 Template.account_tab.friendListFinal = function() {
     if(Meteor.user() != null) {
+	
+	//get the current user
 	var currentUser = Meteor.user().services.facebook.first_name
 		+ " " + Meteor.user().services.facebook.last_name;
+	
+	//get the current user's email
 	var currentEmail = Meteor.user().services.facebook.email;
+	
+	//fetch this user's friend list from his email
 	var output = Friends.findOne({}, currentEmail);
 
+	//store them in friends array before sending to html
 	var friendsArray = new Array();
 	var count = 0;
 	output.forEach(function(data) {
-	    console.log(data);
+	    console.log(data); //test
 	    //var myArray = data.friendList;
 	    console.log("My Friend List Array: " + data.friendList);
 	    //go through each element of friends list
@@ -38,4 +45,53 @@ Template.account_tab.friendListFinal = function() {
     myTest[0] = "Help";
     return myTest;//Friends.findOne({}).friendList;
     //return Friends.find({}, currentEmail)[0];
+}
+
+
+/* autp set of user info with login, friends contain the databse of user */
+Template.account_tab.userInfo = function() {
+
+    if(Methor.userId()) {
+
+	Meteor.subscribe("facebook_info");	
+	var first = Meteor.user().services.facebook.first_name;
+	var last = Meteor.user().services.facebook.last_name;
+	var email = Meteor.user().services.facebook.email;
+	var gender = Meteor.user().services.facebook.gender;
+	var locale = Meteor.user().services.facebook.locale;
+	var id = Meteor.user().services.facebook.id;
+	myPerson = new person(first, last, email, 8675309, gender, locale, id);
+
+	var img = document.getElementById("prof");
+	img.src = "http://graph.facebook.com/" + id + "/picture/?type=large";
+	
+    
+ 
+	document.getElementById("outputfirst").innerHTML = myPerson.firstname;
+	document.getElementById("outputlast").innerHTML = myPerson.lastname;
+	document.getElementById("outputemail").innerHTML = myPerson.email;
+	document.getElementById("outputphone").innerHTML = myPerson.phoneNumber;
+	document.getElementById("outputgender").innerHTML = myPerson.gender;
+	
+	document.getElementById("changefirst").value = myPerson.firstname;
+	document.getElementById("changelast").value = myPerson.lastname;
+	document.getElementById("changeemail").value = myPerson.email;
+	document.getElementById("changephone").value = myPerson.phoneNumber;
+	document.getElementById("changegender").value = myPerson.gender;
+	
+	
+	friendName = "null"; //null at this time
+	///These need to be stored in friend list at time of sign in
+	Friends.insert({
+	    myEmail: email,
+	    firstName: first,
+	    lastName: last,
+	    myGender: gender,
+	    myId: id,
+	    friendList: [{name: friendName}]
+	});
+	
+	return null;
+    }
+
 }

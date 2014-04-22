@@ -6,6 +6,7 @@
 	This uses the accessToken from the Facebook login widget to gain access 
 	to user profile
 */
+
 Accounts.onCreateUser(function(options, user) {
     if (options.profile) { // maintain the default behavior
         user.profile = options.profile;
@@ -30,6 +31,7 @@ Accounts.onCreateUser(function(options, user) {
 	The information grabbed from Facebook cannot be accessed by the client
 	unless the server publishes the information
 */
+
 Meteor.publish("facebook_info", function() { 
 	return Meteor.users.find({_id: this.userId}, {fields: {'services.facebook.first_name': 1,
 								'services.facebook.last_name': 1,
@@ -39,6 +41,20 @@ Meteor.publish("facebook_info", function() {
 								'services.facebook.id': 1}}); 
 });
 
+
+ var getMarker = function() {console.log("Hello from getMarker!");};
+ var GoogleMap;
+  
+ /*
+ 	Allows access to the facebook information
+ */
+/*
+ Accounts.ui.config({
+ 	requestPermissions: {
+ 		facebook: [ 'bio', 'email']
+ 	}
+ });
+*/
 
 Meteor.publish("directory", function() {
 		return Meteor.users.find({}, {fields: {emails: 1, profile: 1}});

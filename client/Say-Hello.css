@@ -61,17 +61,36 @@ input.chosen {
 }
 
 .content-body {
-	height: 50%;
+	height: 40%;
 }
 
 .footer {
-	height: 50%;
+	height: 60%;
 }
 
 .footer-bar {
 	margin-top: -20px;
 	overflow: auto;
 	overflow-x: hidden;
+}
+
+div.account_detail{
+	padding:0.1em;
+	margin:0.1em;
+}
+
+div.account_detail span{
+	display: inline;
+	overflow: hidden;
+}
+
+div.account_detail input{
+	display: inline;
+	width: 100%;
+	padding-top:8px;
+	border:none;
+	background:transparent;
+	
 }
 /*
 .panel {

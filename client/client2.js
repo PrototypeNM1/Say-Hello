@@ -3,7 +3,7 @@ Meteor.subscribe("friends");
 
 /* Send data from friends list */
 Template.account_tab.friendListFinal = function() {
-    if(Meteor.user() != null) {
+    if(Meteor.user().services!=undefined) {
 	
 	//get the current user
 	var currentUser = Meteor.user().services.facebook.first_name
@@ -51,8 +51,11 @@ Template.account_tab.friendListFinal = function() {
 /* autp set of user info with login, friends contain the databse of user */
 Template.account_tab.userInfo = function() {
 
-    //if(Method.userId()) {
-    /*
+    if(Meteor.user()) {
+
+	//check if the user is already in the database
+    
+	//if not
 	Meteor.subscribe("facebook_info");	
 	var first = Meteor.user().services.facebook.first_name;
 	var last = Meteor.user().services.facebook.last_name;
@@ -90,8 +93,20 @@ Template.account_tab.userInfo = function() {
 	    myId: id,
 	    friendList: [{name: friendName}]
 	});
-	*/
-	return null;
-    //}
+	
+	var alti = new Array();
+	alti[0] = "User"
+	alti[1] = "Login!"
+	alto[2] = "Getting his info!"
+	return alti;
+   
+
+
+    } else {
+	var alti = new Array();
+	alti[0] = "No Account"
+	alti[1] = "Login!"
+	return alti;
+    }
 
 }

@@ -380,7 +380,9 @@ Template.event_list.rendered = function() {
 
 
 /*LEVIS CODE GOES HERE*/
+//le
 
+//levistest.meteor.com
 Template.account_tab.events =  {
     //if(Meteor.userId()) {
 	'click .set': function () {

@@ -3,6 +3,7 @@ Meteor.subscribe("friends");
 
 /* Send data from friends list */
 Template.account_tab.friendListFinal = function() {
+    /*
     if(Meteor.user().services!=undefined) {
 	
 	//get the current user
@@ -38,9 +39,9 @@ Template.account_tab.friendListFinal = function() {
 	    //console.log("Final Count: " + count);
 	    //    count = 0;
 	    //console.log( "FriendList Array: " + Friends.findOne({}, currentEmail).friendList );
-	    return Friends.findOne({}, currentEmail).friendList;
-	});
-    }
+//	    return Friends.findOne({}, currentEmail).friendList;
+//	});
+  //  }
     myTest = new Array();
     myTest[0] = "Help";
     return myTest;//Friends.findOne({}).friendList;
@@ -50,13 +51,13 @@ Template.account_tab.friendListFinal = function() {
 
 /* autp set of user info with login, friends contain the databse of user */
 Template.account_tab.userInfo = function() {
-
+    /*
     if(Meteor.user()) {
 
 	//check if the user is already in the database
     
 	//if not
-	Meteor.subscribe("facebook_info");	
+ 	Meteor.subscribe("facebook_info");	
 	var first = Meteor.user().services.facebook.first_name;
 	var last = Meteor.user().services.facebook.last_name;
 	var email = Meteor.user().services.facebook.email;
@@ -102,11 +103,30 @@ Template.account_tab.userInfo = function() {
    
 
 
-    } else {
+    } else {*/
 	var alti = new Array();
 	alti[0] = "No Account"
 	alti[1] = "Login!"
 	return alti;
-    }
+   // }
 
 }
+
+
+
+/*
+  Constructor for the person object
+  Holds person's information
+*/
+function person(firstname, lastname, email, phoneNumber, gender, loc, idNum)
+{
+    this.firstname = firstname;
+    this.lastname = lastname;
+    this.email = email;
+    this.phoneNumber = phoneNumber;
+    this.gender = gender;
+    this.loc = loc;
+    this.idNum = idNum;
+}
+
+

@@ -121,6 +121,12 @@ var initialize = function() {
 			},
 			{timeout: 30000, enableHighAccuracy: true, maximumAge: 75000}
 		);
+		navigator.geolocation.watchPosition(
+			function(pos) {
+				var coords = pos.coords;
+				GoogleMap.setCenter(new google.maps.LatLng(coords.latitude, coords.longitude));
+			}
+		)
 	}
 
 	//google.maps.event.addListener(map, 'idle', function() {

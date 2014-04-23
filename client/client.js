@@ -667,7 +667,7 @@ Template.createDialog.error = function() {
 
 if(Meteor.isClient) {
     console.log("Welcome to client");
-    
+    /*
     if(Meteor.loggingIn()==true) {
 
 	$("full").show();
@@ -682,7 +682,7 @@ if(Meteor.isClient) {
 	    var first = Meteor.user().services.facebook.first_name;
 	    console.log(first);
 	} */
-    }
+    //}
 
     //if(Meteor.loggin
     Deps.autorun(function(){
@@ -767,19 +767,12 @@ if(Meteor.isClient) {
 	
 	}
     });
+
     Deps.autorun(function(){
 	if(Meteor.userId()==null) {
 	   console.log("Logs out");
-	   //Empty every box
-	    //Disable every control
-	    //Put a message you need to be logged in to view anything
-	    //$("full").hide();
-	    //$("epanel").hide();
-	    
-	    //Hide displays
-	    document.getElementById("full").style.display="none";
-	    
-
+	    //while(document.getElementById("footer")==null) {
+	    hide("foo");
 	    //var two = document.getElementById('epanel');
 	    //two.style.display='none';
 
@@ -795,7 +788,14 @@ if(Meteor.isClient) {
 	    
 
 	}
-    })
+    });
 }
 	    
-	     
+function hide(ele) {
+    console.log(document.getElementById("foo"));
+    //$("#full").hide();
+    //$("epanel").hide();
+    
+    //Hide displays
+    document.getElementById("full").style.display='none';
+}

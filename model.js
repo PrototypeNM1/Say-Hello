@@ -141,6 +141,11 @@ Meteor.methods({
 				CurrentEvents.update(eventId,
 						{$push: {attendees: updateTable}});
 
+			} else {
+				// Remove person from event
+				CurrentEvents.update(eventId,
+						{$pull: {attendees: updateTable}});
+
 				var userPastEvents = PastEvents.findOne({user: this.userId});
 				if (userPastEvents) {
 					// document exists for past events for this user, insert event
@@ -150,10 +155,7 @@ Meteor.methods({
 					PastEvents.insert({user: this.userId, events: [eventId]});
 					console.log("User did not have past event entry. Created new");
 				}
-			} else {
-				// Remove person from event
-				CurrentEvents.update(eventId,
-						{$pull: {attendees: updateTable}});
+
 			}
 		}
 	},

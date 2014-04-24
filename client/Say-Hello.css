@@ -74,6 +74,36 @@ input.chosen {
 	overflow-x: hidden;
 }
 
+#epanel {
+	position: relative;
+}
+
+.detail {
+	background-color: #333;
+	border-radius: 10px;
+}
+
+.detail-modal {
+	background-color: #1d1d1d;
+	position: absolute;
+	width: 94%;
+	height: 94%;
+	top: 30px;
+	left: 0px;
+	z-index: 100;
+	padding: 3%;
+}
+
+.e-name {
+	text-align: center;
+	width: 100%;
+}
+
+.who {
+	color: black;
+	text-decoration: underline;
+}
+
 div.account_detail{
 	padding:0.1em;
 	margin:0.1em;

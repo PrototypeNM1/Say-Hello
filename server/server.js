@@ -13,15 +13,16 @@ Accounts.onCreateUser(function(options, user) {
         user.profile = options.profile;
     }
 
-    // get profile data from Facebook
-    var result = Meteor.http.get("https://graph.facebook.com/me", {
-	params: {access_token: user.services.facebook.accessToken}});
+    if (user.services.facebook) {
+        // get profile data from Facebook
+        var result = Meteor.http.get("https://graph.facebook.com/me", {
+	     params: {access_token: user.services.facebook.accessToken}});
 
-    if ( !result.error && result.data ) {
-        // if successfully obtained facebook profile, save it off
-        user.profile.facebook = result.data;
+        if ( !result.error && result.data ) {
+            // if successfully obtained facebook profile, save it off
+            user.profile.facebook = result.data;
+        }
     }
-    
     console.log("Create user");
 
     return user;

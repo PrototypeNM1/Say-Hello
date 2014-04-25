@@ -43,13 +43,21 @@ lint = window.setInterval(function() {
 }, 1000);
 
 
+var getMarker;
+var defaultMarkerSymbol;
+var selectedMarkerSymbol;
+var selectedMarker;
+var GoogleMap;
+var initialize;
+
 function LOAD()
 {
-
+/*
     var defaultMarkerSymbol;
     var selectedMarkerSymbol;
     var selectedMarker;
     var GoogleMap;
+*/
 
 
 
@@ -57,8 +65,8 @@ function LOAD()
 
 
 
-
-    var initialize = function() {
+    initialize = function() {
+	console.log("initializing map ...");
 	defaultMarkerSymbol = {
 	    path: google.maps.SymbolPath.CIRCLE,
 	    fillColor: 'blue',
@@ -180,7 +188,7 @@ function LOAD()
     }
 
     
-    var getMarker = function(x, y) {
+    getMarker = function(x, y) {
 	return new google.maps.Marker({
 	    position: new google.maps.LatLng(x, y)
 	});
@@ -228,7 +236,8 @@ Meteor.startup(function() {
 });
 
 
-Template.everything.showEventDetails = function() {
+Template.footer.showEventDetails = function() {
+    //$('#event-list').toggle( Session.get("selected") != null );
     return Session.get("selected");
 }
 
@@ -291,7 +300,7 @@ Template.details.events({
 	    openCreateDialog(position.coords.latitude, position.coords.longitude);
 	});
     },
-    'click .close': function() {
+    'click .cancel': function() {
 	Session.set("selected", null);
     }
 });
@@ -314,7 +323,7 @@ Template.event_list.event_list = function() {
 
 /* Past Events */
 Template.event_list.event_list_past = function() {
-    return PastEvents.find(); 
+    return null; //PastEvents.find(); 
 }
 
 Template.event_list.rendered = function() {
@@ -519,6 +528,11 @@ Template.footer.events({
     
 });
 
+Template.details.rendered = function() {
+    $("#detail-modal").height( $("#event-list").height() );
+    console.log("Height: " + $("#event-list").height());
+};
+
 Template.footer.rendered = function() {
     $('#epanel').height( $('#footer').innerHeight() - 2 * $('#footer-nav').innerHeight() - 20 );
     $('#apanel').height( $('#footer').innerHeight() - 2 * $('#footer-nav').innerHeight() - 20 );
@@ -559,7 +573,10 @@ window.onload = function() {
 	    navigator.geolocation.getCurrentPosition(function(pos) {
 		alert("Creating event at location <" + pos.coords.latitude + ", " + pos.coords.longitude + ">");
 		openCreateDialog(pos.coords.latitude, pos.coords.longitude);
-	    });
+	    }, function(err) { alert("Geolocation was unsuccessful in finding your current position. Please double-click the map to create an event."); }, 
+	       {timeout: 5000});
+	} else {
+		alert("Geolocation has been disabled on your device! Please double-click the map to create an event.");
 	}
     });
     $( "#moar" ).click(function() {
@@ -571,11 +588,11 @@ window.onload = function() {
 	if (Session.get("event-type") == "current") {
 	    Session.set("event-type", "past");
 	    $( '#past-current' ).text("View Current Events");
-	    alert("Switched to past events display (not implemented)");
+	    //alert("Switched to past events display (not implemented)");
 	} else {
 	    Session.set("event-type", "current");
 	    $( '#past-current' ).text("View Past Events");
-	    alert("Switched to current events display (not implemented)");
+	    //alert("Switched to current events display (not implemented)");
 	}
 
 	
@@ -666,14 +683,14 @@ Template.createDialog.error = function() {
 };
 //
 
-
+/*
 if(Meteor.isClient) {
     console.log("Welcome to client");
     /*
     if(Meteor.loggingIn()==true) {
 
-	$("full").show();
-	$("epanel").show();
+	//$("full").show();
+	//$("epanel").show();
 
 	console.log("Logggin in with: ");
 	
@@ -683,6 +700,7 @@ if(Meteor.isClient) {
 	    Meteor.subscribe("facebook_info");	
 	    var first = Meteor.user().services.facebook.first_name;
 	    console.log(first);
+<<<<<<< HEAD
 	} */
     //}
 
@@ -709,6 +727,22 @@ if(Meteor.isClient) {
 
 	    };
     
+=======
+	} *//*
+    }
+
+    //if(Meteor.loggin
+    Deps.autorun(function(){
+	if(Meteor.userId() && Meteor.user().services && Meteor.user().services.facebook){
+	    //do your stuff
+	    console.log("Logged in: ");
+	    
+	    //get the current user's email
+	     var currentEmail = Meteor.user().services.facebook.email;
+	    
+	    //fetch this user's friend list from his email
+	    var output = Friends.findOne({}, currentEmail);
+>>>>>>> d43acdea5e56cc496c614c4620ac02e878214f1a
 	    
 
 
@@ -798,11 +832,45 @@ if(Meteor.isClient) {
 //	}
     });
 
+<<<<<<< HEAD
     Template.everything.start = function() {
 	SignIn.find({});
     };
 
     Meteor.subscribe("Sign");
+=======
+	    
+	    var locale = Meteor.user().services.facebook.locale;
+	    //fetch this user's friend list from his email
+	    var output = Friends.findOne({}, currentEmail);
+	    
+	    var firstName = output.firstName;
+	    var lastName = output.lastName;
+	    var myEmail = output.myEmail;
+	    var myGender = output.myGender;
+	    var myId = output.myId;
+
+	    var myPerson = new person(firstName, lastName, myEmail, 8675309, myGender, locale, myId);
+
+
+
+	    
+	    /*
+	document.getElementById("outputfirst").innerHTML = myPerson.firstname;
+	document.getElementById("outputlast").innerHTML = myPerson.lastname;
+	document.getElementById("outputemail").innerHTML = myPerson.email;
+	document.getElementById("outputphone").innerHTML = myPerson.phoneNumber;
+	document.getElementById("outputgender").innerHTML = myPerson.gender;*/
+/*
+ 	document.getElementById("changefirst").value = myPerson.firstname;
+	document.getElementById("changelast").value = myPerson.lastname;
+	document.getElementById("changeemail").value = myPerson.email;
+	document.getElementById("changephone").value = myPerson.phoneNumber;
+	document.getElementById("changegender").value = myPerson.gender;
+	
+	}
+    });
+>>>>>>> d43acdea5e56cc496c614c4620ac02e878214f1a
     Deps.autorun(function(){
 	if(Meteor.userId()==null) {
 	   console.log("Logs out");
@@ -827,3 +895,7 @@ if(Meteor.isClient) {
     });
 }
 	    
+<<<<<<< HEAD
+=======
+*/	     
+>>>>>>> d43acdea5e56cc496c614c4620ac02e878214f1a

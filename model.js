@@ -1,7 +1,13 @@
 // This is the model.js; it is used to set up the client and server
 CurrentEvents = new Meteor.Collection("current_events")
 PastEvents = new Meteor.Collection("past_events")
+Sign = new Meteor.Collection("sign");
 
+Sign.allow ({
+    insert: function() {
+	return true;
+    }
+});
 
 CurrentEvents.allow({
     insert: function(userId, myEvent) {

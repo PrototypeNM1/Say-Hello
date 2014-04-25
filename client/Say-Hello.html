@@ -3,8 +3,13 @@
   
   <!-- Scipts and CSS files -->
   <script src="https://maps.googleapis.com/maps/api/js?sensor=true"></script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css"> 
+  
+ <link rel="stylesheet" href="Say-Hello.css">
+
   <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
   <script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
 
@@ -29,7 +34,6 @@ te('[data-role="navbar"] a', 'click', function () {
   </script>
   
 </head>
-
 <body>
   <div data-role="page" id="foo">  
     <div data-role="header" data-theme="b">
@@ -42,8 +46,17 @@ te('[data-role="navbar"] a', 'click', function () {
       <h1>Say Hello</h1>	
     </div><!-- /header -->
     {{> everything}}
+  </div><!-- /page -->
+</body>
 
-    {{#isolate}}
+<!-- The mega template -->
+<template name="everything">
+  {{#each start}}
+  {{rv}}
+  {{/each}}
+ 
+
+  {{#isolate}}
   {{#if showEventDetails}}
   {{> details}}
   {{/if}}
@@ -56,26 +69,6 @@ te('[data-role="navbar"] a', 'click', function () {
     {{> footer}}
     {{/isolate}}
   </div><!-- /footer -->
-
-
-
-  </div><!-- /page -->
-
-   <script>
-    function hide(ele) {
-    console.log(document.getElementById("foo"));
-    //$("#full").hide();
-    //$("epanel").hide();
-    
-    //Hide displays
-    document.getElementById("full").style.display='none';
-}
-    </script>
-
-</body>
-
-<!-- The mega template -->
-<template name="everything">
   
 </template>
 
@@ -91,6 +84,7 @@ te('[data-role="navbar"] a', 'click', function () {
     initialize();
   </script>
 </template>
+
 
 <template name="map">
   <div data-role="none" class="map" id="map_canvas" onload="initialize();">
@@ -197,7 +191,7 @@ te('[data-role="navbar"] a', 'click', function () {
 
 <template name="footer">
 
-  
+
   <div data-role="tabs" id="footer-tabs">
     <div data-role="navbar" id="footer-nav">
       <ul>
@@ -211,7 +205,7 @@ te('[data-role="navbar"] a', 'click', function () {
       
       <ul id="event-list" data-role="listview" data-inset="true">
 	<li><a href="#" id="create">Create New Event</a></li>
- 
+	
 	{{> event_list}}
 	<li><a href="#" id="moar">Load more ...</a></li>
         <li><a href="#" id="past-current">View Past Events</a></li>
@@ -226,6 +220,7 @@ te('[data-role="navbar"] a', 'click', function () {
       {{> account_tab}}
     </div>
   </div>
+
 </template>
 
 <template name="event_list">
@@ -254,6 +249,7 @@ te('[data-role="navbar"] a', 'click', function () {
 
 <!-- Accounts tab -->
 <template name="account_tab">
+  
   <h2>Profile</h2>
   
   <div id="full">

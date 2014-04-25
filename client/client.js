@@ -185,8 +185,8 @@ function LOAD()
 	    position: new google.maps.LatLng(x, y)
 	});
     }
-    //google.maps.event.addDomListener(window, 'load', initialize);
-    //window.onload = (initialize)
+    google.maps.event.addDomListener(window, 'load', initialize);
+    window.onload = (initialize)
 
 
     Meteor.subscribe("directory");
@@ -194,6 +194,7 @@ function LOAD()
     Meteor.subscribe("past_events");
     Meteor.subscribe("facebook_info");
 
+   
     //Meteor.subscribe("facebook_info");
     Meteor.subscribe("friends");
 
@@ -318,6 +319,7 @@ Template.event_list.event_list_past = function() {
 
 Template.event_list.rendered = function() {
     $('#event-list').listview('refresh');
+    
     $('.event-item').click(function() {
 	Session.set("selected", $(this).attr('name'));
     });
@@ -684,118 +686,144 @@ if(Meteor.isClient) {
 	} */
     //}
 
+
+
     //if(Meteor.loggin
     Deps.autorun(function(){
 	if(Meteor.userId()){
-	    //do your stuff
-	    console.log("Logged in: ");
-	    
-	    //get the current user's email
-	     var currentEmail = Meteor.user().services.facebook.email;
-	    
-	    //fetch this user's friend list from his email
-	    var output = Friends.findOne({}, currentEmail);
+	    	
+	    /*
+	    Template.everything.start2 = function() {
+		console.log("--");
+		var rv = new Array();
+		rv[0] ="Logoff";
+		return rv;
+
+	    }*/
+	     SignIn.insert({count: 1});
+	   
+
+	    Template.everything.rendered = function() {
+		console.log("-");
+		//document.getElementById('footer').style.display = 'none';
+
+	    };
+    
 	    
 
-//	    var myPerson = new person(output.firstName, ouput.lastName, output.myEmail, 8675309, output.myGender, locale, output.myId);
+
+	  //  if(Meteor.user()) {
+		//do your stuff
+		console.log("Logged in: ");
+		
+		//get the current user's email
+		
+		Meteor.subscribe("facebook_info");	
+		
+		var currentEmail = Meteor.user().services.facebook.email;
+		
+		//fetch this user's friend list from his email
+		var output = Friends.findOne({}, currentEmail);
+		
+
+		//	    var myPerson = new person(output.firstName, ouput.lastName, output.myEmail, 8675309, output.myGender, locale, output.myId);
 
 
-	    //if output is undefined hence not an object,
-	    //hence put it in the database
-	    if(typeof(output)!="object") {
-		console.log("There's no such user");
-		//populate the field
-		if(counter == 0){			
+		//if output is undefined hence not an object,
+		//hence put it in the database
+		if(typeof(output)!="object") {
+		    console.log("There's no such user");
+		    //populate the field
+		    if(counter == 0){			
 		    Meteor.subscribe("facebook_info");	
-		    var first = Meteor.user().services.facebook.first_name;
-		    var last = Meteor.user().services.facebook.last_name;
-		    var email = Meteor.user().services.facebook.email;
-		    var gender = Meteor.user().services.facebook.gender;
-		    var locale = Meteor.user().services.facebook.locale;
-		    var id = Meteor.user().services.facebook.id;
-		    myPerson = new person(first, last, email, 8675309, gender, locale, id);
+			var first = Meteor.user().services.facebook.first_name;
+			var last = Meteor.user().services.facebook.last_name;
+			var email = Meteor.user().services.facebook.email;
+			var gender = Meteor.user().services.facebook.gender;
+			var locale = Meteor.user().services.facebook.locale;
+			var id = Meteor.user().services.facebook.id;
+			myPerson = new person(first, last, email, 8675309, gender, locale, id);
+			
+			var img = document.getElementById("prof");
+			img.src = "http://graph.facebook.com/" + id + "/picture/?type=large";
+			counter++;
+		    }
 		    
-		    var img = document.getElementById("prof");
-		    img.src = "http://graph.facebook.com/" + id + "/picture/?type=large";
-		    counter++;
+		    
+		    
+		    console.log("Not defined, new user!");
+		    friendName = "null"; //null at this time
+		    ///These need to be stored in friend list at time of sign in
+		    Friends.insert({
+		    myEmail: email,
+			firstName: first,
+			lastName: last,
+			myGender: gender,
+			myId: id,
+			friendList: [{name: friendName}]
+		    });
+		    
 		}
 		
 		
+		var locale = Meteor.user().services.facebook.locale;
+		//fetch this user's friend list from his email
+	    var output = Friends.findOne({}, currentEmail);
 		
-		console.log("Not defined, new user!");
-		friendName = "null"; //null at this time
-		///These need to be stored in friend list at time of sign in
-		Friends.insert({
-		    myEmail: email,
-		    firstName: first,
-		    lastName: last,
-		    myGender: gender,
-		    myId: id,
-		    friendList: [{name: friendName}]
-		});
+		var firstName = output.firstName;
+		var lastName = output.lastName;
+		var myEmail = output.myEmail;
+		var myGender = output.myGender;
+		var myId = output.myId;
+		
+		var myPerson = new person(firstName, lastName, myEmail, 8675309, myGender, locale, myId);
+		
+		
+		
+		
+		/*
+		  document.getElementById("outputfirst").innerHTML = myPerson.firstname;
+		  document.getElementById("outputlast").innerHTML = myPerson.lastname;
+		  document.getElementById("outputemail").innerHTML = myPerson.email;
+		  document.getElementById("outputphone").innerHTML = myPerson.phoneNumber;
+		  document.getElementById("outputgender").innerHTML = myPerson.gender;*/
+
+ 		document.getElementById("changefirst").value = myPerson.firstname;
+		document.getElementById("changelast").value = myPerson.lastname;
+		document.getElementById("changeemail").value = myPerson.email;
+		document.getElementById("changephone").value = myPerson.phoneNumber;
+		document.getElementById("changegender").value = myPerson.gender;
 		
 	    }
-
-	    
-	    var locale = Meteor.user().services.facebook.locale;
-	    //fetch this user's friend list from his email
-	    var output = Friends.findOne({}, currentEmail);
-	    
-	    var firstName = output.firstName;
-	    var lastName = output.lastName;
-	    var myEmail = output.myEmail;
-	    var myGender = output.myGender;
-	    var myId = output.myId;
-
-	    var myPerson = new person(firstName, lastName, myEmail, 8675309, myGender, locale, myId);
-
-
-
-	    
-	    /*
-	document.getElementById("outputfirst").innerHTML = myPerson.firstname;
-	document.getElementById("outputlast").innerHTML = myPerson.lastname;
-	document.getElementById("outputemail").innerHTML = myPerson.email;
-	document.getElementById("outputphone").innerHTML = myPerson.phoneNumber;
-	document.getElementById("outputgender").innerHTML = myPerson.gender;*/
-
- 	document.getElementById("changefirst").value = myPerson.firstname;
-	document.getElementById("changelast").value = myPerson.lastname;
-	document.getElementById("changeemail").value = myPerson.email;
-	document.getElementById("changephone").value = myPerson.phoneNumber;
-	document.getElementById("changegender").value = myPerson.gender;
-	
-	}
+//	}
     });
 
+    Template.everything.start = function() {
+	SignIn.find({});
+    };
+
+    Meteor.subscribe("Sign");
     Deps.autorun(function(){
 	if(Meteor.userId()==null) {
 	   console.log("Logs out");
-	    //while(document.getElementById("footer")==null) {
-	    hide("foo");
-	    //var two = document.getElementById('epanel');
-	    //two.style.display='none';
-
-	    //empty everything
-	    document.getElementById("changefirst").value = ""
-	    document.getElementById("changelast").value = "";
-	    document.getElementById("changeemail").value ="";
-	    document.getElementById("changephone").value = "";
-	    document.getElementById("changegender").value = "";
 	    
-	    document.getElementById("message").value ="You need to be looged in to view items<br>";
 
+	     Meteor.subscribe("Sign");
+
+	    SignIn.insert({count: 1, help: 3});
 	    
+	    
+	    Template.everything.rendered = function() {
+		console.log("!");
+		//document.getElementById('footer').style.display = 'none';
+
+	    };
 
 	}
+
+	if(Meteor.loggingIn()) {
+	    console.log("trying to login");
+	};
     });
 }
 	    
-function hide(ele) {
-    console.log(document.getElementById("foo"));
-    //$("#full").hide();
-    //$("epanel").hide();
-    
-    //Hide displays
-    document.getElementById("full").style.display='none';
-}

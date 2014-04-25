@@ -232,7 +232,7 @@ te('[data-role="navbar"] a', 'click', function () {
     <div data-role="navbar" id="footer-nav">
       <ul>
 	<li><a href="#epanel" data-href="epanel" class="ui-btn-active"><h2>Events</h2></a></li>
-	<li><a href="#ppanel" data-href="ppanel"><h2>People</h2></a></li>
+	<li><a href="#ppanel" data-href="ppanel"><h2>Friends</h2></a></li>
 	<li><a href="#apanel" class="account" data-href="apanel"><h2>Account</h2></a></li>
       </ul>
     </div><!-- /navbar -->
@@ -285,7 +285,18 @@ te('[data-role="navbar"] a', 'click', function () {
 </template>
 
 <template name="people_tab">
-  <h1>People go here</h1>
+  
+  <h1>Friends</h1>
+ 
+  <!-- Present Friend List from here 
+  <input type="button" id = "showFriends" class="show" value="Friends"/>
+  <div style="background-color: #333; padding: 5px; width: 100%; border-radius: 5px; box-shadow: 1px 1px 1px 1px grey;">
+-->
+  <div id="friends">
+    {{#each friendListFinal}}
+    {{this.name}}
+    {{/each}}
+  </div>
 </template>
 
 <!-- Accounts tab -->
@@ -327,19 +338,8 @@ te('[data-role="navbar"] a', 'click', function () {
       <input type="button" id = "makeChange" class="edit" value="Edit"/>
     </div>
   </div> 
-  <!-- Present Friend List from here -->
-  <input type="button" id = "showFriends" class="show" value="Friends"/>
+   
   
-  
-  <div style="background-color: yellow" id="friends">
-    
-    <h1>Friends</h1>
-  </div>
-  
-  {{#each friendListFinal}}
-  {{this.name}}
-  {{/each}}
-
   
 </template>
 

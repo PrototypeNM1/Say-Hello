@@ -349,33 +349,48 @@ Template.event_list.rendered = function() {
 
 /*LEVIS CODE GOES HERE*/
 //le
-
-//levistest.meteor.com
-Template.account_tab.events =  {
-    //if(Meteor.userId()) {
-    'click .show': function() {
+Template.people_tab.rendered = function() {
+    
 		//get the current user
-		var currentUser = Meteor.user().services.facebook.first_name
-		    + " " + Meteor.user().services.facebook.last_name;
+		var currentUser = Meteor.user().services.facebook.first_name + " " + Meteor.user().services.facebook.last_name;
 		
 		//get the current user's email
 		var currentEmail = Meteor.user().services.facebook.email
 		
 //		console.log(Friends.findOne({myEmail: currentEmail}));
-	var list = "<h1>Friends</h1>"
+	var list = ""
 	var result = Friends.findOne({myEmail: currentEmail});
-	
+    
 	    var friends = result.friendList;
-	    console.log(friends);
+	    //console.log(friends);
 	    for(var i=0; i<friends.length; i++) {
 		if(typeof(friends[i])!="object") {
 		    //console.log("Friend"+i+"="+friends[i]);
+		    list = list + '<div style="background-color: #333; padding: 5px; width: 100%; border-radius: 5px; box-shadow: 1px 1px 1px 1px grey;">';
 		    list = list + "<br>" + friends[i] + "<br>";
+		    //add email address of these friends
+		    var nameArray = friends[i].split(" ");
+		    var emailSearch = null;
+		    if(nameArray.length>1) {
+			var emailSearch = Friends.findOne({firstName: nameArray[0]}, {lastName: nameArray[1]});
+		    }
+		    if(emailSearch!=null) {
+			console.log("Got the email: " + emailSearch.myEmail);
+			list = list + emailSearch.myEmail;
+		    
+		    }
+		    
+		    list = list + '</div>';
 		}
 	    }
 	console.log(list);
 	document.getElementById("friends").innerHTML=list;
-    },
+    
+},
+
+//levistest.meteor.com
+Template.account_tab.events =  {
+    //if(Meteor.userId()) {
     'click .set': function () {
 	/*
 	if(counter == 0){			
@@ -916,7 +931,7 @@ if(Meteor.isClient) {
 
 	    /* print the friend list */
 	    /* Send data from friends list */
-	    Template.account_tab.friendsList = function() {
+	    Template.people_tab.friendsList = function() {
 	
 		//get the current user
 		var currentUser = Meteor.user().services.facebook.first_name

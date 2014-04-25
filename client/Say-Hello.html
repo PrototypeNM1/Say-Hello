@@ -35,6 +35,10 @@ te('[data-role="navbar"] a', 'click', function () {
   
 </head>
 <body>
+  
+  
+
+  
   <div data-role="page" id="foo">  
     <div data-role="header" data-theme="b">
       <!-- The login goes here -->
@@ -47,7 +51,36 @@ te('[data-role="navbar"] a', 'click', function () {
     </div><!-- /header -->
     
     {{> everything}}
+    
+    {{#isolate}}
+    {{#if currentUser}}
+    <link rel="stylesheet" href="Say-Hello.css">
+     
+    {{else}}
+    <div class="main">
+      <!-- Do the main page here --> 
+      <div style="padding: 10px;">
+	<h1> Welcome to Say Hello App </h1>
+	<p> Blah Blah Blah.... </p>
+
+	<h3>Lead Developer</h3>
+	<li>
+	  <ol></ol>
+	  <ol></ol>
+	  <ol>....</ol>
+	</li>
+      </div>
+
+
+    </div>
+    {{/if}}
+    {{/isolate}}
+ 
+
   </div><!-- /page -->
+  
+  
+
 </body>
 
 <!-- The mega template -->
@@ -306,15 +339,8 @@ te('[data-role="navbar"] a', 'click', function () {
   {{#each friendListFinal}}
   {{this.name}}
   {{/each}}
-  {{#if currentUser}}
-  {{else}}
-  <div style="position: fixed;
-    top: 65px;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index:99; background-color: yellow;"></div>
-{{/if}}
+
+  
 </template>
 
 

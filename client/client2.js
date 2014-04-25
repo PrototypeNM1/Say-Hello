@@ -118,7 +118,7 @@ Template.account_tab.userInfo = function() {
   Constructor for the person object
   Holds person's information
 */
-function person(firstname, lastname, email, phoneNumber, gender, loc, idNum)
+/*function person(firstname, lastname, email, phoneNumber, gender, loc, idNum)
 {
     this.firstname = firstname;
     this.lastname = lastname;
@@ -127,6 +127,6 @@ function person(firstname, lastname, email, phoneNumber, gender, loc, idNum)
     this.gender = gender;
     this.loc = loc;
     this.idNum = idNum;
-}
+}*/
 
 

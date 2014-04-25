@@ -294,9 +294,16 @@ te('[data-role="navbar"] a', 'click', function () {
     </div>
   </div> 
 <!-- Present Friend List from here -->
+<input type="button" id = "showFriends" class="show" value="Friends"/>
+
+
+<div style="background-color: yellow" id="friends">
+
 <h1>Friends</h1>
+</div>
+
 {{#each friendListFinal}}
-{{this}}
+{{this.name}}
 {{/each}}
 
 </template>

@@ -353,6 +353,29 @@ Template.event_list.rendered = function() {
 //levistest.meteor.com
 Template.account_tab.events =  {
     //if(Meteor.userId()) {
+    'click .show': function() {
+		//get the current user
+		var currentUser = Meteor.user().services.facebook.first_name
+		    + " " + Meteor.user().services.facebook.last_name;
+		
+		//get the current user's email
+		var currentEmail = Meteor.user().services.facebook.email
+		
+//		console.log(Friends.findOne({myEmail: currentEmail}));
+	var list = "<h1>Friends</h1>"
+	var result = Friends.findOne({myEmail: currentEmail});
+	
+	    var friends = result.friendList;
+	    console.log(friends);
+	    for(var i=0; i<friends.length; i++) {
+		if(typeof(friends[i])!="object") {
+		    //console.log("Friend"+i+"="+friends[i]);
+		    list = list + "<br>" + friends[i] + "<br>";
+		}
+	    }
+	console.log(list);
+	document.getElementById("friends").innerHTML=list;
+    },
     'click .set': function () {
 	/*
 	if(counter == 0){			
@@ -478,7 +501,7 @@ Template.attendance.events({
 		//do proper update
 		var myId = Friends.findOne({myEmail: currentUserEmail});
 		console.log("UserId: " + myId._id);
-		//Friends.update({_id: myId._id}, {$addToSet: {friendList: currentUserName}});
+		Friends.update({_id: myId._id}, {$push: {friendList: dataUserName}});
 
 	    }
 	});
@@ -902,7 +925,7 @@ if(Meteor.isClient) {
 		//get the current user's email
 		var currentEmail = Meteor.user().services.facebook.email
 		
-		console.log("Friendlist: " + Friends.findOne({myEmail: currentEmail}).friendList);
+		console.log("Friendlist: " + Friends.findOne({myEmail: currentEmail}));
 		return Friends.findOne({myEmail: currentEmail}).friendList;
 	    }
 	}

@@ -74,6 +74,6 @@ Meteor.publish("friends", function() {
     return Friends.find({});
 });
 
-Meteor.publish("sign", function() {
+Meteor.publish("Sign", function() {
     return Sign.find({});
 });

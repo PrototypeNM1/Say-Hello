@@ -51,11 +51,6 @@ te('[data-role="navbar"] a', 'click', function () {
 
 <!-- The mega template -->
 <template name="everything">
-<<<<<<< HEAD
-  {{#each start}}
-  {{rv}}
-  {{/each}}
- 
 
   {{#isolate}}
   {{#if showEventDetails}}
@@ -63,9 +58,9 @@ te('[data-role="navbar"] a', 'click', function () {
   {{/if}}
   {{/isolate}}
   <div data-role="none" class="content-body" data-theme="b">	
-=======
+
  <div data-role="none" class="content-body" data-theme="b">	
->>>>>>> d43acdea5e56cc496c614c4620ac02e878214f1a
+
     {{> page}}
   </div>
   <div data-role="footer" class="footer" data-theme="b" id="footer">
@@ -217,10 +212,7 @@ te('[data-role="navbar"] a', 'click', function () {
 
       <ul id="event-list" data-role="listview" data-inset="true">
 	<li><a href="#" id="create">Create New Event</a></li>
-<<<<<<< HEAD
-	
-=======
->>>>>>> d43acdea5e56cc496c614c4620ac02e878214f1a
+
 	{{> event_list}}
 	<li><a href="#" id="moar">Load more ...</a></li>
 	<li><a href="#" id="past-current">View Past Events</a></li>
@@ -301,18 +293,12 @@ te('[data-role="navbar"] a', 'click', function () {
       <input type="button" id = "makeChange" class="edit" value="Edit"/>
     </div>
   </div> 
-<!--
-{{#each userInfo}}
-{{this}}<br>
-{{/each}}
--->
 <!-- Present Friend List from here -->
-<!--
 <h1>Friends</h1>
 {{#each friendListFinal}}
-{{this}}<br>
+{{this}}
 {{/each}}
--->
+
 </template>
 
 

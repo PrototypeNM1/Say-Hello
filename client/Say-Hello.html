@@ -60,15 +60,24 @@ te('[data-role="navbar"] a', 'click', function () {
     <div class="main">
       <!-- Do the main page here --> 
       <div style="padding: 10px;">
-	<h1> Welcome to Say Hello App </h1>
-	<p> Blah Blah Blah.... </p>
-
-	<h3>Lead Developer</h3>
-	<li>
-	  <ol></ol>
-	  <ol></ol>
-	  <ol>....</ol>
-	</li>
+	<h2 style="margin:0"> Say Hello </h2>
+	<p> <i>Dethaw for the world of icebreakers</i> </p>
+	
+	<b>Lead Developers</b>
+	<ol>
+	  <li>Derek DeWitt</li>
+	  <li>Levi Heilman</li>
+	  <li>Nicholas Rishel</li>
+	  <li>Levi Miller</li>
+	  <li>Sakshay Bhatnagar</li>
+	  <li>Soumya Kumar</li>
+	</ol>
+	
+	<br>
+	<span>Please login to continue ... </span>
+	<br>
+	<br>
+	<span>Made for the CS307 Class Project</span>
       </div>
 
 
@@ -232,7 +241,7 @@ te('[data-role="navbar"] a', 'click', function () {
     <div data-role="navbar" id="footer-nav">
       <ul>
 	<li><a href="#epanel" data-href="epanel" class="ui-btn-active"><h2>Events</h2></a></li>
-	<li><a href="#ppanel" data-href="ppanel"><h2>Friends</h2></a></li>
+	<li><a href="#ppanel" data-href="ppanel" class="friendsTab"><h2>Friends</h2></a></li>
 	<li><a href="#apanel" class="account" data-href="apanel"><h2>Account</h2></a></li>
       </ul>
     </div><!-- /navbar -->
@@ -294,7 +303,7 @@ te('[data-role="navbar"] a', 'click', function () {
 -->
   <div id="friends">
     {{#each friendListFinal}}
-    {{this.name}}
+    {{this}}
     {{/each}}
   </div>
 </template>
@@ -304,6 +313,24 @@ te('[data-role="navbar"] a', 'click', function () {
   
   <h2>Profile</h2>
   
+<!--
+  <div width="100%">
+    <table width="100%">
+      <tr>
+	<td width="80%">
+	  <input type="text" id="status" value="Status Message"/>
+	</td
+	   <td width="20%">
+	     	  <input type="text" id="status" value="Status Message"/>
+	   </td>
+      </tr>
+  </div>
+-->
+
+
+
+  <input type="button" id = "makeChange" class="edit" value="Edit"/>
+    
   <div id="full">
     <div>
       <img id="prof" src="">
@@ -316,7 +343,7 @@ te('[data-role="navbar"] a', 'click', function () {
     <br>
     <div class="account_detail">
       <span>Last Name:</span>
-      <input type="text" id="changelast"/>
+       <input type="text" id="changelast"/>
     </div>
     <br>
     <div class="account_detail">

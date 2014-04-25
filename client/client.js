@@ -336,57 +336,10 @@ Template.event_list.rendered = function() {
 
 
 
-/*
-
-
-  {{#each friend_list}}
-  {{friendList}}
-  {{/each}}
-  
-*/
-
 
 
 /*LEVIS CODE GOES HERE*/
 //le
-Template.people_tab.rendered = function() {
-    
-		//get the current user
-		var currentUser = Meteor.user().services.facebook.first_name + " " + Meteor.user().services.facebook.last_name;
-		
-		//get the current user's email
-		var currentEmail = Meteor.user().services.facebook.email
-		
-//		console.log(Friends.findOne({myEmail: currentEmail}));
-	var list = ""
-	var result = Friends.findOne({myEmail: currentEmail});
-    
-	    var friends = result.friendList;
-	    //console.log(friends);
-	    for(var i=0; i<friends.length; i++) {
-		if(typeof(friends[i])!="object") {
-		    //console.log("Friend"+i+"="+friends[i]);
-		    list = list + '<div style="background-color: #333; padding: 5px; width: 100%; border-radius: 5px; box-shadow: 1px 1px 1px 1px grey;">';
-		    list = list + "<br>" + friends[i] + "<br>";
-		    //add email address of these friends
-		    var nameArray = friends[i].split(" ");
-		    var emailSearch = null;
-		    if(nameArray.length>1) {
-			var emailSearch = Friends.findOne({firstName: nameArray[0]}, {lastName: nameArray[1]});
-		    }
-		    if(emailSearch!=null) {
-			console.log("Got the email: " + emailSearch.myEmail);
-			list = list + emailSearch.myEmail;
-		    
-		    }
-		    
-		    list = list + '</div>';
-		}
-	    }
-	console.log(list);
-	document.getElementById("friends").innerHTML=list;
-    
-},
 
 //levistest.meteor.com
 Template.account_tab.events =  {
@@ -562,6 +515,34 @@ Template.footer.events({
 	  -and disables the text fields
 	*/
 	
+	//get the current user's email
+	Meteor.subscribe("facebook_info");	
+	console.log("Getting Account Information");
+	var currentEmail = Meteor.user().services.facebook.email;
+	console.log("For emai: " + currentEmail);
+	//fetch this user's friend list from his email
+	var output = Friends.findOne({myEmail: currentEmail});
+	
+	
+	var locale = Meteor.user().services.facebook.locale;
+	//fetch this user's friend list from his email
+	
+	
+	var firstName = output.firstName;
+	var lastName = output.lastName;
+	var myEmail = output.myEmail;
+	var myGender = output.myGender;
+	var myId = output.myId;
+	
+	var myPerson = new person(firstName, lastName, myEmail, 8675309, myGender, locale, myId);
+	
+ 	document.getElementById("changefirst").value = myPerson.firstname;
+	document.getElementById("changelast").value = myPerson.lastname;
+	document.getElementById("changeemail").value = myPerson.email;
+	document.getElementById("changephone").value = myPerson.phoneNumber;
+	document.getElementById("changegender").value = myPerson.gender;
+
+
     }
     
 });
@@ -844,20 +825,69 @@ Conflicts
 
 */
 
+Template.footer.events({
+    'click .friendsTab': function() {
+	//get the current user
+	var currentUser = Meteor.user().services.facebook.first_name + " " + Meteor.user().services.facebook.last_name;
+	
+	//get the current user's email
+	var currentEmail = Meteor.user().services.facebook.email
+	
+	//		console.log(Friends.findOne({myEmail: currentEmail}));
+	var list = new Array();
+	var result = Friends.findOne({myEmail: currentEmail});
+	
+	var friends = result.friendList;
+	//console.log(friends);
+	for(var i=0; i<friends.length; i++) {
+	    if(typeof(friends[i])!="object") {
+		//console.log("Friend"+i+"="+friends[i]);
+		list = list + '<div style="background-color: #333; padding: 5px; width: 100%; border-radius: 5px; box-shadow: 1px 1px 1px 1px grey;">';
+		list = list + "<br>" + friends[i] + "<br>";
+		//add email address of these friends
+		var nameArray = friends[i].split(" ");
+		var emailSearch = null;
+		if(nameArray.length>1) {
+		    var emailSearch = Friends.findOne({firstName: nameArray[0]}, {lastName: nameArray[1]});
+		}
+		if(emailSearch!=null) {
+		    console.log("Got the email: " + emailSearch.myEmail);
+		    list = list + emailSearch.myEmail;
+		    
+			}
+		
+		list = list + '</div>';
+	    }
+	}
+	console.log(list);
+	//return list;
+	document.getElementById("friends").innerHTML=list;
+    }
+});
+	    
+
 if(Meteor.isClient) {
     console.log("Welcome to client");
     
     Deps.autorun(function(){
 	if(Meteor.userId() && Meteor.user().services && Meteor.user().services.facebook){
+
 	    
+	    console.log("Logged In:");
+
+
+
+
 	    //get the current user's email
 	    Meteor.subscribe("facebook_info");	
 	    
+
 	    var currentEmail = Meteor.user().services.facebook.email;
 	    
+	    console.log(currentEmail);
 	    //fetch this user's friend list from his email
-	    var output = Friends.findOne({}, currentEmail);
-
+	    var output = Friends.findOne({myMail: currentEmail});
+	    
 	    //if output is undefined hence not an object,
 	    //hence put it in the database
 	    if(typeof(output)!="object") {
@@ -872,14 +902,14 @@ if(Meteor.isClient) {
 		    var locale = Meteor.user().services.facebook.locale;
 		    var id = Meteor.user().services.facebook.id;
 		    myPerson = new person(first, last, email, 8675309, gender, locale, id);
-			
+		    
 		    var img = document.getElementById("prof");
 		    img.src = "http://graph.facebook.com/" + id + "/picture/?type=large";
 		    counter++;
 		}
 		
 		
-		    
+		
 		console.log("Not defined, new user!");
 		friendName = "null"; //null at this time
 		///These need to be stored in friend list at time of sign in
@@ -895,58 +925,19 @@ if(Meteor.isClient) {
 	    }
 	    
 	    
-	    var locale = Meteor.user().services.facebook.locale;
-	    //fetch this user's friend list from his email
-	    var output = Friends.findOne({}, currentEmail);
-	    
-	    var firstName = output.firstName;
-	    var lastName = output.lastName;
-	    var myEmail = output.myEmail;
-	    var myGender = output.myGender;
-	    var myId = output.myId;
-	    
-	    var myPerson = new person(firstName, lastName, myEmail, 8675309, myGender, locale, myId);
-		
-		
-	    
-		
-	    /*
-	      document.getElementById("outputfirst").innerHTML = myPerson.firstname;
-	      document.getElementById("outputlast").innerHTML = myPerson.lastname;
-	      document.getElementById("outputemail").innerHTML = myPerson.email;
-	      document.getElementById("outputphone").innerHTML = myPerson.phoneNumber;
-	      document.getElementById("outputgender").innerHTML = myPerson.gender;*/
-	    
- 	    document.getElementById("changefirst").value = myPerson.firstname;
-	    document.getElementById("changelast").value = myPerson.lastname;
-	    document.getElementById("changeemail").value = myPerson.email;
-	    document.getElementById("changephone").value = myPerson.phoneNumber;
-	    document.getElementById("changegender").value = myPerson.gender;
 	    
 
-
-
-
-
-
-	    /* print the friend list */
-	    /* Send data from friends list */
-	    Template.people_tab.friendsList = function() {
-	
-		//get the current user
-		var currentUser = Meteor.user().services.facebook.first_name
-		    + " " + Meteor.user().services.facebook.last_name;
-		
-		//get the current user's email
-		var currentEmail = Meteor.user().services.facebook.email
-		
-		console.log("Friendlist: " + Friends.findOne({myEmail: currentEmail}));
-		return Friends.findOne({myEmail: currentEmail}).friendList;
-	    }
+	    
+	    
 	}
- 
-
 	
+
+
+
+
+	   
+
+
     });
 		 
 		 
@@ -955,6 +946,7 @@ if(Meteor.isClient) {
     Deps.autorun(function(){
 	if(Meteor.userId()==null) {
 	   console.log("Logs out");
+	    
 	    
 
 	     //Meteor.subscribe("Sign");
@@ -972,7 +964,10 @@ if(Meteor.isClient) {
 
 	if(Meteor.loggingIn()) {
 	    console.log("Trying to login");
-	};
+	    
+
+	}
+    
     });
 }
 	    

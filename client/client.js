@@ -376,7 +376,7 @@ Template.account_tab.events =  {
         document.getElementById('changephone').disabled=true;
         document.getElementById('changegender').disabled=true;
 	
-	var currentEmail = Meteor.user().services.facebook.email;
+	var currentEmail = email;
 	    
 	var myId = Friends.findOne({myEmail: currentEmail});
 	console.log("myId: " + myId);
@@ -449,32 +449,7 @@ Template.footer.events({
 	  -and disables the text fields
 	*/
 	
-	//get the current user's email
-	Meteor.subscribe("facebook_info");	
-	console.log("Getting Account Information");
-	var currentEmail = Meteor.user().services.facebook.email;
-	console.log("For emai: " + currentEmail);
-	//fetch this user's friend list from his email
-	var output = Friends.findOne({myEmail: currentEmail});
 	
-	
-	var locale = Meteor.user().services.facebook.locale;
-	//fetch this user's friend list from his email
-	
-	
-	var firstName = output.firstName;
-	var lastName = output.lastName;
-	var myEmail = output.myEmail;
-	var myGender = output.myGender;
-	var myId = output.myId;
-	
-	var myPerson = new person(firstName, lastName, myEmail, 8675309, myGender, locale, myId);
-	
- 	document.getElementById("changefirst").value = myPerson.firstname;
-	document.getElementById("changelast").value = myPerson.lastname;
-	document.getElementById("changeemail").value = myPerson.email;
-	document.getElementById("changephone").value = myPerson.phoneNumber;
-	document.getElementById("changegender").value = myPerson.gender;
 
 
     }
@@ -796,7 +771,6 @@ if(Meteor.isClient) {
     console.log("Welcome to client");
     
     Deps.autorun(function(){
-	if(Meteor.userId() && Meteor.user().services && Meteor.user().services.facebook){
 
 	    if(Meteor.userId() && Meteor.user().emails && Meteor.user().emails[0].address){
 		console.log("email is: " + Meteor.user().emails[0].address);
@@ -855,7 +829,13 @@ if(Meteor.isClient) {
         	document.getElementById('changegender').disabled=true;
 
 
-
+		var img = document.getElementById("prof");
+		if(myId != null){
+	    		img.src = "http://graph.facebook.com/" + myId + "/picture/?type=large";
+		}
+		else{
+			img.src = "";
+		}
 
 
 	    /* print the friend list */
@@ -960,8 +940,24 @@ if(Meteor.isClient) {
 	    
 		
 	    var img = document.getElementById("prof");
-	    img.src = "http://graph.facebook.com/" + myId + "/picture/?type=large";
+		if(myId != null){
+	    		img.src = "http://graph.facebook.com/" + myId + "/picture/?type=large";
+		}
+		else{
+			img.src = "";
+		}
 
+		document.getElementById("changefirst").value = myPerson.firstname;
+	    document.getElementById("changelast").value = myPerson.lastname;
+	    document.getElementById("changeemail").value = myPerson.email;
+	    document.getElementById("changephone").value = myPerson.phoneNumber;
+	    document.getElementById("changegender").value = myPerson.gender;
+	    
+		document.getElementById('changefirst').disabled=true;
+        	document.getElementById('changelast').disabled=true;
+        	document.getElementById('changeemail').disabled=true;
+        	document.getElementById('changephone').disabled=true;
+        	document.getElementById('changegender').disabled=true;
 	    
 	    
 	}
@@ -970,7 +966,7 @@ if(Meteor.isClient) {
 
 
 	   
-	}
+	
     
 
     });

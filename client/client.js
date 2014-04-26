@@ -64,7 +64,6 @@ function LOAD()
 
 
 
-
     initialize = function() {
 	console.log("initializing map ...");
 	defaultMarkerSymbol = {
@@ -833,9 +832,9 @@ if(Meteor.isClient) {
 		if(myId != null){
 	    		img.src = "http://graph.facebook.com/" + myId + "/picture/?type=large";
 		}
-		else{
-			img.src = "";
-		}
+		//else{
+		//	img.src = "";
+		//}
 
 
 	    /* print the friend list */
@@ -943,9 +942,9 @@ if(Meteor.isClient) {
 		if(myId != null){
 	    		img.src = "http://graph.facebook.com/" + myId + "/picture/?type=large";
 		}
-		else{
-			img.src = "";
-		}
+		//else{
+		//	img.src = "";
+		//}
 
 		document.getElementById("changefirst").value = myPerson.firstname;
 	    document.getElementById("changelast").value = myPerson.lastname;

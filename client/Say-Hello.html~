@@ -196,7 +196,11 @@ te('[data-role="navbar"] a', 'click', function () {
     {{#each attendees}}
     
     <img src ="SilhouetteHead.jpg" id="{{_id}}profPic" height="32px" width="32px">
-	
+	<!--<script src="client.js">
+	</script>
+	<script>
+		getProfPic();
+	</script>-->
     <a href="#" id="name">{{name}}</a>
     <a href="#" class="link" id="shareContact">
       
@@ -331,6 +335,8 @@ te('[data-role="navbar"] a', 'click', function () {
 -->
 
 
+
+  <input type="button" id = "makeChange" class="edit" value="Edit"/>
     
   <div id="full">
     <div>

@@ -945,7 +945,8 @@ if(Meteor.isClient) {
 		
 	    
 		
-	    
+	    var img = document.getElementById("prof");
+	    img.src = "http://graph.facebook.com/" + myId + "/picture/?type=large";
 	    
  	    document.getElementById("changefirst").value = myPerson.firstname;
 	    document.getElementById("changelast").value = myPerson.lastname;

@@ -51,14 +51,15 @@ te('[data-role="navbar"] a', 'click', function () {
     </div><!-- /header -->
     
     {{> everything}}
-    
+   
+    <!--
     {{#isolate}}
     {{#if currentUser}}
     <link rel="stylesheet" href="Say-Hello.css">
      
     {{else}}
     <div class="main">
-      <!-- Do the main page here --> 
+       
       <div style="padding: 10px;">
 	<h2 style="margin:0"> Say Hello </h2>
 	<p> <i>Dethaw for the world of icebreakers</i> </p>
@@ -84,7 +85,7 @@ te('[data-role="navbar"] a', 'click', function () {
     </div>
     {{/if}}
     {{/isolate}}
- 
+    -->
 
   </div><!-- /page -->
   
@@ -193,17 +194,21 @@ te('[data-role="navbar"] a', 'click', function () {
     <div class="who"><b>Who Is Here:</b></div>
     
     <!-- <ul data-role="listview" id="attendee-list" data-inset="true">	-->
-    {{#each attendees}}
-    <a href="#" id="name">{{name}}</a>
+   
+
     <a href="#" class="link" id="shareContact">
-      
-      
-      <!-- Share Contact Info -->
-      <img title="Share Details with this Person" src="link.png" id="{{_id}}" height="32px" width="32px" alt="Share Details with this Person" />
-      
+      <img title="Share Details of this Person" src="link.png" name="{{email}}" height="32px" width="32px" alt="Share Details of this Person" />
     </a>
+
+     {{#each attendees}}
+    <!-- Share Contact Info -->
+       <input type="checkbox" id="myRadio{{email}}"><a href="#" id="name{{email}}">{{name}}</a>
+       <div style="display: none;" id="userA{{email}}">{{email}}</div>
+        
+	
     <br />
     {{/each}}  
+    
   </div>
 </template>
 
@@ -270,7 +275,6 @@ te('[data-role="navbar"] a', 'click', function () {
       {{> account_tab}}
     </div>
   </div>
-  
 </template>
 
 <template name="event_list">
@@ -302,9 +306,18 @@ te('[data-role="navbar"] a', 'click', function () {
   <div style="background-color: #333; padding: 5px; width: 100%; border-radius: 5px; box-shadow: 1px 1px 1px 1px grey;">
 -->
   <div id="friends">
+    
+    {{#if currentUser}}
     {{#each friendListFinal}}
     {{this}}
     {{/each}}
+    
+    {{else}}
+    <div>Please login to see your friends</div>
+    
+    {{/if}}
+    
+   
   </div>
 </template>
 
@@ -365,6 +378,9 @@ te('[data-role="navbar"] a', 'click', function () {
       <input type="button" id = "makeChange" class="edit" value="Edit"/>
     </div>
   </div> 
+  
+    <div>Please login to see your friends</div>
+  
    
   
   

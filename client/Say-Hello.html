@@ -194,16 +194,8 @@ te('[data-role="navbar"] a', 'click', function () {
     <div class="who"><b>Who Is Here:</b></div>
     
     <!-- <ul data-role="listview" id="attendee-list" data-inset="true">	-->
-<<<<<<< HEAD
    
 
-=======
-    {{#each attendees}}
-    
-    <img src ="SilhouetteHead.jpg" id="{{_id}}profPic" height="32px" width="32px">
-	
-    <a href="#" id="name">{{name}}</a>
->>>>>>> 5833d9e5d1eae8879d358a3c8a2d6e5207d4ca45
     <a href="#" class="link" id="shareContact">
       <img title="Share Details of this Person" src="link.png" name="{{email}}" height="32px" width="32px" alt="Share Details of this Person" />
     </a>
@@ -349,10 +341,12 @@ te('[data-role="navbar"] a', 'click', function () {
 -->
 
 
+
+  <input type="button" id = "makeChange" class="edit" value="Edit"/>
     
   <div id="full">
     <div>
-      <img id="prof" src="SilhouetteHead.jpg" height="100" width="100">
+      <img id="prof" src="">
       <input type="file" id="choose" style="display:none"/>
     </div>
     <div class="account_detail">
@@ -391,6 +385,9 @@ te('[data-role="navbar"] a', 'click', function () {
   
   
 </template>
+
+
+ 
 
 
  

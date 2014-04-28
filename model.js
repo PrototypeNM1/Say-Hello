@@ -136,8 +136,16 @@ Meteor.methods({
 
 		var attendIndex = _.indexOf(this.userId);
 		var uName = displayName(Meteor.users.findOne(this.userId));
+	    
+	    var uEmail = null;
+	if(Meteor.user().service.facebook) {
+	    uEmail = Meteor.user().services.facebook.email
+	} else {
+	    uEmail = user.emails[o].address;
+	    console.log("Email login: " + uEmail);
+	}
 
-	    var uEmail = Meteor.user().services.facebook.email;
+//	    var uEmail = Meteor.user().services.facebook.email;
 		//check(uName, String);
 	    var updateTable = {name: uName, email: uEmail};
 		check(updateTable, {

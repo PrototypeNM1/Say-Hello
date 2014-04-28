@@ -467,7 +467,14 @@ Template.footer.events({
     'click .friendsTab': function() {
 	
 	console.log("Clicked friends tab");
-	var currentEmail = Meteor.user().services.facebook.email
+	var currentEmail = null;
+	if(Meteor.user().services.facebook) {
+	    currentEmail = Meteor.user().services.facebook.email
+	} else {
+	    currentEmail = user.emails[o].address;
+	    console.log("Email login: " + currentEmail);
+	}
+
 	var list = new Array();
 	var result = Friends.findOne({myEmail: currentEmail});
 	var friends = result.friendList;
@@ -796,6 +803,9 @@ Conflicts
 if(Meteor.isClient) {
     console.log("Welcome to client");
     
+
+    Meteor.subscribe("friends");
+
     Deps.autorun(function(){
 	
 	if(Meteor.user() && Meteor.user().emails && Meteor.user().emails[0].address){
@@ -857,9 +867,9 @@ if(Meteor.isClient) {
 
 
 		var img = document.getElementById("prof");
-		if(myId != null){
-	    		img.src = "http://graph.facebook.com/" + myId + "/picture/?type=large";
-		}
+		//if(myId != null){
+    	    img.src = "public/SilhoutteHead.jpg";
+		//}
 		//else{
 		//	img.src = "";
 		//}
@@ -952,11 +962,12 @@ if(Meteor.isClient) {
 		
 		
 	    
-		
+		  var id = Meteor.user().services.facebook.id;
+		  
 	    var img = document.getElementById("prof");
-		if(myId != null){
-	    		img.src = "http://graph.facebook.com/" + myId + "/picture/?type=large";
-		}
+		//if(myId != null){
+	    		img.src = "http://graph.facebook.com/" + id + "/picture/?type=large";
+		//}
 		//else{
 		//	img.src = "";
 		//}

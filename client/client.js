@@ -131,17 +131,16 @@ function LOAD()
 	GoogleMap = new google.maps.Map(map_canvas, map_options);
 
 	if (navigator.geolocation) {
+		userMarker = new google.maps.Marker({
+			map: GoogleMap,
+			icon: userMarkerSymbol
+		});
 	    navigator.geolocation.watchPosition(
 		function(pos) {
 			var coords = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
-		    userMarker = new google.maps.Marker({
-				position: coords
-			});
-			userMarker.setMap(GoogleMap);
-			userMarker.setIcon(userMarkerSymbol);
 		    if(manualPosition) return;
 		    GoogleMap.panTo(coords);
-			marker.setPosition(coords);
+			userMarker.setPosition(coords);
 		}
 	    )
 	}

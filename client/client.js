@@ -175,11 +175,13 @@ function LOAD()
 		    selectedMarker.setIcon(selectedMarkerSymbol);
 		    Session.set("selected", _event._id);
 		    var coords = new google.maps.LatLng(marker.getPosition().lat(), marker.getPosition().lng());
-			alert("test");
 		    manualPosition = true;
 		    GoogleMap.panTo(coords);
 		});
 	    });
+		google.maps.event.addListener(userMarker, 'click', function() {
+			manualPosition = false;
+		});
 	    //});
 	    google.maps.event.addListener(GoogleMap, 'dblclick', function(mouse) {
 		console.log("Lat: " + mouse.latLng.lat() + 

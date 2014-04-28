@@ -46,7 +46,9 @@ lint = window.setInterval(function() {
 var getMarker;
 var defaultMarkerSymbol;
 var selectedMarkerSymbol;
+var userMarkerSymbol;
 var selectedMarker;
+var userMarker
 var GoogleMap;
 var initialize;
 var manualPosition = false;
@@ -79,6 +81,14 @@ function LOAD()
 	selectedMarkerSymbol = {
 	    path: google.maps.SymbolPath.CIRCLE,
 	    fillColor: 'green',
+	    strokeColor: 'black',
+	    scale: 13,
+	    fillOpacity: 1,
+	    strokeWeight: 3
+	};
+	userMarkerSymbol = {
+	    path: google.maps.SymbolPath.CIRCLE,
+	    fillColor: 'red',
 	    strokeColor: 'black',
 	    scale: 13,
 	    fillOpacity: 1,
@@ -123,9 +133,15 @@ function LOAD()
 	if (navigator.geolocation) {
 	    navigator.geolocation.watchPosition(
 		function(pos) {
+			var coords = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
+		    userMarker = new google.maps.Marker({
+				position: coords
+			});
+			userMarker.setMap(GoogleMap);
+			userMarker.setIcon(userMarkerSymbol);
 		    if(manualPosition) return;
-		    var coords = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
 		    GoogleMap.panTo(coords);
+			marker.setPosition(coords);
 		}
 	    )
 	}

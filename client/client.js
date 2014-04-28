@@ -122,8 +122,8 @@ function LOAD()
 	if (navigator.geolocation) {
 	    navigator.geolocation.getCurrentPosition(
 		function(pos) {
-		    var coords = pos.coords;
-		    GoogleMap.setCenter(new google.maps.LatLng(coords.latitude, coords.longitude));
+		    var coords = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
+		    GoogleMap.setCenter(coords);
 		},
 		function(err) {
 		},
@@ -131,8 +131,8 @@ function LOAD()
 	    );
 	    navigator.geolocation.watchPosition(
 		function(pos) {
-		    var coords = pos.coords;
-		    GoogleMap.setCenter(new google.maps.LatLng(coords.latitude, coords.longitude));
+		    var coords = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
+		    GoogleMap.panTo(coords);
 		}
 	    )
 	}

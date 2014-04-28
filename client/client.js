@@ -799,6 +799,7 @@ if(Meteor.isClient) {
     Deps.autorun(function(){
 	
 	if(Meteor.user() && Meteor.user().emails && Meteor.user().emails[0].address){
+		//Configuration for email login
 		console.log("email is: " + Meteor.user().emails[0].address);
 		currentEmail = Meteor.user().emails[0].address;
 		var output = Friends.findOne({myEmail: currentEmail});
@@ -867,7 +868,7 @@ if(Meteor.isClient) {
 
 	
 	else if(Meteor.user() && Meteor.user().services && Meteor.user().services.facebook){
-
+		//Configure Facebook login
 	    
 	    console.log("Logged In:");
 

@@ -514,7 +514,39 @@ Template.footer.events({
 	  -sets the values of each text field
 	  -and disables the text fields
 	*/
+	Meteor.subscribe("facebook_info");	
+	console.log("Getting Account Information");
+	var currentEmail = Meteor.user().services.facebook.email;
+	console.log("For email: " + currentEmail);
+	//fetch this user's friend list from his email
+	var output = Friends.findOne({myEmail: currentEmail});
 	
+	
+	var locale = Meteor.user().services.facebook.locale;
+	//fetch this user's friend list from his email
+	
+	
+	var firstName = output.firstName;
+	var lastName = output.lastName;
+	var myEmail = output.myEmail;
+	var myGender = output.myGender;
+	var myId = output.myId;
+	
+	var phoneNumber = output.phoneNumber;
+
+	var myPerson = new person(firstName, lastName, myEmail, phoneNumber, myGender, locale, myId);
+	
+ 	document.getElementById("changefirst").value = myPerson.firstname;
+	document.getElementById("changelast").value = myPerson.lastname;
+	document.getElementById("changeemail").value = myPerson.email;
+	document.getElementById("changephone").value = myPerson.phoneNumber;
+	document.getElementById("changegender").value = myPerson.gender;
+	
+	var img = document.getElementById("prof");
+
+	console.log("Image: " + output.profile_pic);
+	img.src = output.profile_pic; //"http://graph.facebook.com/" + id + "/picture/?type=large";
+	//document.getElementById(
 	
     }
     

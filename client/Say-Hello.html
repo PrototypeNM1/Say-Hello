@@ -202,7 +202,7 @@ te('[data-role="navbar"] a', 'click', function () {
 
      {{#each attendees}}
     <!-- Share Contact Info -->
-	<img src ="SilhouetteHead.jpg" id="profPic" height="32px" width="32px">
+	<img src ="http://graph.facebook.com/{{fbook_id}}/picture/?type=large" id="profPic" height="32px" width="32px">
        <input type="checkbox" id="myRadio{{email}}"><a href="#" id="name{{email}}">{{name}}</a>
        
        <div style="display: none;" id="userA{{email}}">{{email}}</div>

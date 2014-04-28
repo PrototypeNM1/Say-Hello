@@ -82,7 +82,7 @@ Meteor.methods({
 		// get the _id of the event if exists, otherwise generate idi
 		    console.log("this.userId: " + this.userId);
 		    var uName = displayName(Meteor.users.findOne(this.userId));
-		   
+			var uFID = Meteor.user().services.facebook.id;	   
 		    
 		     var uEmail = Meteor.user().services.facebook.email;
 		    //contactEmail(Meteor.users.findOne(this.userId));
@@ -94,7 +94,7 @@ Meteor.methods({
 			y: options.y,
 			name: options.name,
 			description: options.description,
-		    attendees: [{name: uName, email: uEmail}]
+		    attendees: [{name: uName, email: uEmail, fbook_id: uFID}]
 		});
 		return id;
 	},
@@ -138,8 +138,11 @@ Meteor.methods({
 		var uName = displayName(Meteor.users.findOne(this.userId));
 	    
 	    var uEmail = null;
-	if(Meteor.user().service.facebook) {
-	    uEmail = Meteor.user().services.facebook.email
+		var uFID = null;
+	
+	if(Meteor.user().services.facebook) {
+	    uEmail = Meteor.user().services.facebook.email;
+		uFID = Meteor.user().services.facebook.id;
 	} else {
 	    uEmail = user.emails[o].address;
 	    console.log("Email login: " + uEmail);
@@ -147,7 +150,7 @@ Meteor.methods({
 
 //	    var uEmail = Meteor.user().services.facebook.email;
 		//check(uName, String);
-	    var updateTable = {name: uName, email: uEmail, fbook_id: Meteor.users.findOne(this.userId).services.facebook.id};
+	    var updateTable = {name: uName, email: uEmail, fbook_id: uFID};
 		check(updateTable, {
 		    name: String,
 		    email: String,

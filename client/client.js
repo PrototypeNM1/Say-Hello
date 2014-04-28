@@ -559,7 +559,7 @@ Template.footer.events({
 	var img = document.getElementById("prof");
 
 	console.log("Image: " + output.profile_pic);
-	img.src = output.profile_pic; //"http://graph.facebook.com/" + id + "/picture/?type=large";
+	img.src = "http://graph.facebook.com/" + myId + "/picture/?type=large";
 	//document.getElementById(
 	
     }

@@ -147,10 +147,11 @@ Meteor.methods({
 
 //	    var uEmail = Meteor.user().services.facebook.email;
 		//check(uName, String);
-	    var updateTable = {name: uName, email: uEmail};
+	    var updateTable = {name: uName, email: uEmail, fbook_id: Meteor.users.findOne(this.userId).services.facebook.id};
 		check(updateTable, {
 		    name: String,
-		    email: String
+		    email: String,
+		    fbook_id: String
 		});
 		check(this.userId, String);
 		//console.log(typeof updateTable);

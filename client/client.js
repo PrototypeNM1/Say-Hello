@@ -49,6 +49,7 @@ var selectedMarkerSymbol;
 var selectedMarker;
 var GoogleMap;
 var initialize;
+var manualPosition = false;
 
 function LOAD()
 {
@@ -120,17 +121,9 @@ function LOAD()
 	GoogleMap = new google.maps.Map(map_canvas, map_options);
 
 	if (navigator.geolocation) {
-	    navigator.geolocation.getCurrentPosition(
-		function(pos) {
-		    var coords = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
-		    GoogleMap.setCenter(coords);
-		},
-		function(err) {
-		},
-		{timeout: 30000, enableHighAccuracy: true, maximumAge: 75000}
-	    );
 	    navigator.geolocation.watchPosition(
 		function(pos) {
+		    if(manualPosition) return;
 		    var coords = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
 		    GoogleMap.panTo(coords);
 		}
@@ -156,7 +149,7 @@ function LOAD()
 		marker.setTitle(_event.name);
 		marker.setIcon(defaultMarkerSymbol);
 		google.maps.event.addListener(marker, 'click', function() {
-		    var theMarker
+		    //var theMarker
 		    if (selectedMarker)
 			selectedMarker.setIcon(defaultMarkerSymbol);
 		    //theMarker = _.clone(defaultMarkerSymbol);
@@ -165,6 +158,10 @@ function LOAD()
 		    //theMarker.scale = 8 + Math.sqrt(_event.attendees.length);
 		    selectedMarker.setIcon(selectedMarkerSymbol);
 		    Session.set("selected", _event._id);
+		    var coords = new google.maps.LatLng(marker.getPosition().lat(), marker.getPosition().lng());
+			alert("test");
+		    manualPosition = true;
+		    GoogleMap.panTo(coords);
 		});
 	    });
 	    //});

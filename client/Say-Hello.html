@@ -202,7 +202,9 @@ te('[data-role="navbar"] a', 'click', function () {
 
      {{#each attendees}}
     <!-- Share Contact Info -->
+	<img src ="SilhouetteHead.jpg" id="profPic" height="32px" width="32px">
        <input type="checkbox" id="myRadio{{email}}"><a href="#" id="name{{email}}">{{name}}</a>
+       
        <div style="display: none;" id="userA{{email}}">{{email}}</div>
         
 	
@@ -341,12 +343,10 @@ te('[data-role="navbar"] a', 'click', function () {
 -->
 
 
-
-  <input type="button" id = "makeChange" class="edit" value="Edit"/>
     
   <div id="full">
     <div>
-      <img id="prof" src="">
+      <img id="prof" src="SilhouetteHead.jpg" height="100px" width="100px">
       <input type="file" id="choose" style="display:none"/>
     </div>
     <div class="account_detail">
@@ -379,7 +379,6 @@ te('[data-role="navbar"] a', 'click', function () {
     </div>
   </div> 
   
-    <div>Please login to see your friends</div>
   
    
   

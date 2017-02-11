@@ -1,3 +1,7 @@
+window.load = function() {
+  
+}
+
 
 var lint;
 var myPerson;
@@ -18,24 +22,7 @@ function person(firstname, lastname, email, phoneNumber, gender, loc, idNum)
   this.idNum = idNum;
 }
 
-lint = window.setInterval(function() {
-  //console.log('------');
-  if (google) {
-    //console.log('google exists');
-    if (google.maps) { //google.maps.SymbolPath.CIRCLE
-      //console.log('google.maps exists');
-      if (google.maps.SymbolPath) {
-        //console.log('google.maps.SymbolPath exists');
-        if (google.maps.SymbolPath.CIRCLE === 0) {
-          //console.log('google.maps.SymbolPath.CIRCLE exists');
-          window.clearInterval(lint);
-          initialize_google_map();
-        }
-      }
-    }
-  }
-}, 1000);
-
+initialize_google_maps();
 
 var getMarker;
 var defaultMarkerSymbol;
@@ -46,182 +33,6 @@ var userMarker
 var GoogleMap;
 var initialize;
 var manualPosition = false;
-
-function LOAD()
-{
-  /*
-    var defaultMarkerSymbol;
-    var selectedMarkerSymbol;
-    var selectedMarker;
-    var GoogleMap;
-    */
-
-
-
-
-
-
-
-  initialize = function() {
-    console.log("initializing map ...");
-    defaultMarkerSymbol = {
-      path: google.maps.SymbolPath.CIRCLE,
-      fillColor: 'blue',
-      strokeColor: 'black',
-      scale: 13,
-      fillOpacity: 1,
-      strokeWeight: 3
-    };
-    selectedMarkerSymbol = {
-      path: google.maps.SymbolPath.CIRCLE,
-      fillColor: 'green',
-      strokeColor: 'black',
-      scale: 13,
-      fillOpacity: 1,
-      strokeWeight: 3
-    };
-    userMarkerSymbol = {
-      path: google.maps.SymbolPath.CIRCLE,
-      fillColor: 'red',
-      strokeColor: 'black',
-      scale: 13,
-      fillOpacity: 1,
-      strokeWeight: 3
-    };
-    //init_stuff = window.setInterval(function() {
-    //window.clearInterval(init_stuff);
-
-    var map_canvas = document.getElementById("map_canvas");
-    var map_options = {
-      center: new google.maps.LatLng(40.4319, -86.9202),
-      zoom: 16,
-      scrollwheel: false,
-      disableDoubleClickZoom: true,
-      streetViewControl: false,
-      disableDefaultUI: true,
-      zoomControl: true,
-      //mapMaker: true
-      mapTypeId: google.maps.MapTypeId.HYBRID,
-      styles: [{
-        featureType: "poi",
-        elementType: "label",
-        stylers: [{ visibility: "off" }]
-      }]
-    }
-
-    var MapInterval;
-    function WaitForGMap() {
-      MapInterval = window.setInterval(function() {	
-        if (GoogleMap) {
-          window.clearInterval(MapInterval);
-          //console.log(GoogleMap);
-          LoadMapEvents();
-        }
-      }, 100);
-    }
-    WaitForGMap();
-    //alert(map_options.center);
-
-    GoogleMap = new google.maps.Map(map_canvas, map_options);
-
-    if (navigator.geolocation) {
-      userMarker = new google.maps.Marker({
-        map: GoogleMap,
-        icon: userMarkerSymbol
-      });
-      navigator.geolocation.watchPosition(
-        function(pos) {
-          var coords = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
-          if(manualPosition) return;
-          GoogleMap.panTo(coords);
-          userMarker.setPosition(coords);
-        }
-      )
-    }
-
-    //google.maps.event.addListener(map, 'idle', function() {
-    // generate markers
-    //	alert("Google Map Loaded.");
-    /*
-      for (var _event in CurrentEvents.find().fetch()) {
-      console.log("Event: " + _event[0]);
-      var marker = getMarker(_event.x, _event.y);
-      marker.setMap(map);
-      }
-      */
-    function LoadMapEvents() {
-      //console.log("Revent Count (init): " + CurrentEvents.find().count());
-      CurrentEvents.find({}).forEach(function(_event) {
-        console.log("Event: " + _event.name);
-        var marker = getMarker(_event.x, _event.y);
-        marker.setMap(GoogleMap);
-        marker.setTitle(_event.name);
-        marker.setIcon(defaultMarkerSymbol);
-        google.maps.event.addListener(marker, 'click', function() {
-          //var theMarker
-          if (selectedMarker)
-            selectedMarker.setIcon(defaultMarkerSymbol);
-          //theMarker = _.clone(defaultMarkerSymbol);
-          selectedMarker = marker;
-          //theMarker = _.clone(selectedMarkerSymbol)
-          //theMarker.scale = 8 + Math.sqrt(_event.attendees.length);
-          selectedMarker.setIcon(selectedMarkerSymbol);
-          Session.set("selected", _event._id);
-          var coords = new google.maps.LatLng(marker.getPosition().lat(), marker.getPosition().lng());
-          manualPosition = true;
-          GoogleMap.panTo(coords);
-        });
-      });
-      google.maps.event.addListener(userMarker, 'click', function() {
-        manualPosition = false;
-      });
-      //});
-      google.maps.event.addListener(GoogleMap, 'dblclick', function(mouse) {
-        console.log("Lat: " + mouse.latLng.lat() + 
-          "\nLong: " + mouse.latLng.lng());
-        console.log("userId: " + Meteor.userId())
-        if (! Meteor.userId())
-          return; // not logged in
-        var coords = mouse.latLng
-        openCreateDialog(coords.lat(), coords.lng());
-      });
-    }; // LoadMapEvents
-    //}, 100);
-  }
-  var openCreateDialog = function(x, y) {
-    Session.set("createCoords", {x: x, y: y});
-    Session.set("createError", null);
-    Session.set("showCreateDialog", true);
-    //initialize();
-  }
-
-
-  getMarker = function(x, y) {
-    return new google.maps.Marker({
-      position: new google.maps.LatLng(x, y)
-    });
-  }
-  google.maps.event.addDomListener(window, 'load', initialize);
-  window.onload = (initialize)
-
-
-  Meteor.subscribe("directory");
-  Meteor.subscribe("current_events", initialize);
-  Meteor.subscribe("past_events");
-  Meteor.subscribe("facebook_info");
-
-
-  //Meteor.subscribe("facebook_info");
-  Meteor.subscribe("friends");
-  Meteor.subscribe("sign");
-
-
-
-
-
-  Template.map.rendered = initialize;
-}; // LOAD
-
 
 //Template.map.rendered = initialize;
 /*

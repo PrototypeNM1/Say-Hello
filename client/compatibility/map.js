@@ -1,4 +1,5 @@
 var GoogleMap;
+var autocomplete;
 //
 var defaultMarkerSymbol; 
 var selectedMarkerSymbol;
@@ -53,7 +54,6 @@ var Map = {
   recenterButton: function() {
     var recenterButton = document.createElement('div');
     recenterButton.style.padding = '2px';
-    recenterButton.style.margin = '5px';
     recenterButton.innerHTML = '&#10687;';
     recenterButton.style.fontSize = '21px';
     recenterButton.style.textAlign = 'center';
@@ -63,7 +63,7 @@ var Map = {
     });
     recenterButton.index = 1;
     return recenterButton;
-  },
+  }, 
   setMarkerValues: function() {
     defaultMarkerValues = {
       path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
@@ -76,6 +76,38 @@ var Map = {
     selectedMarkerSymbol = Object.assign({fillColor: 'lightgreen'}, defaultMarkerValues);
     userMarkerSymbol = Object.assign({fillColor: 'teal'}, defaultMarkerValues);
     return true;
+  },
+  getAutocompleteBox: function() {
+    var element = document.createElement('input');
+    element.style.width = '100%';
+    element.id = 'autocomplete';
+    element.type = 'text';
+    element.placeholder = 'Enter your address';
+    element.index = 1;
+    element.style.padding = '7px';
+    return element;
+  },
+  initAutoComplete: function() {
+    var element = this.getAutocompleteBox();
+    autocomplete = new google.maps.places.Autocomplete(
+      element,
+      {types: ['geocode']}
+    );
+    autocomplete.addListener('place_changed', function() {
+      var place = autocomplete.getPlace();
+      for (var component in componentForm) {
+        document.getElementById(component).value = '';
+        document.getElementById(component).disabled = false;
+      }
+      for (var i = 0; i < place.address_components.length; i++) {
+        var addressType = place.address_components[i].types[0];
+        if (componentForm[addressType]) {
+          var val = place.address_components[i][componentForm[addressType]];
+          document.getElementById(addressType).value = val;
+        }
+      }
+    });
+    GoogleMap.controls[google.maps.ControlPosition.TOP_CENTER].push(element); 
   },
   setClickEvents: function() {
     google.maps.event.addListener(userMarker, 'click', function() {
@@ -96,6 +128,7 @@ var Map = {
       this.center();
     }
     this.setClickEvents();
+    this.initAutoComplete();
   }
 };
 

@@ -13,6 +13,143 @@ Meteor.startup(function() {
   });
 });
 
+if(Meteor.isClient) {
+  console.log("Welcome to client");
+  Meteor.subscribe("friends");
+  Deps.autorun(function(){
+
+    if(Meteor.user() && Meteor.user().emails && Meteor.user().emails[0].address){
+      //Configuration for email login
+      console.log("email is: " + Meteor.user().emails[0].address);
+      currentEmail = Meteor.user().emails[0].address;
+      var output = Friends.findOne({myEmail: currentEmail});
+      if(typeof(output)!="object") {
+        console.log("There's no such user");
+        myPerson = new person(null, null, currentEmail, null, null, null, null);
+        console.log("Not defined, new user!");
+        friendName = "null";
+        Friends.insert({
+          myEmail: myPerson.email,
+          firstName: myPerson.firstname,
+          lastName: myPerson.lastname,
+          myGender: myPerson.gender,
+          myId: myPerson.id,
+          friendList: [{name: friendName}]
+        });
+      }
+      var output = Friends.findOne({myEmail: currentEmail});
+      console.log("output is: " + output.firstName);
+      var firstName = output.firstName;
+      var lastName = output.lastName;
+      var myEmail = output.myEmail;
+      var myGender = output.myGender;
+      var myId = output.myId;
+      var myPerson = new person(firstName, lastName, myEmail, null, myGender, locale, myId);
+      document.getElementById("changefirst").value = myPerson.firstname;
+      document.getElementById("changelast").value = myPerson.lastname;
+      document.getElementById("changeemail").value = myPerson.email;
+      document.getElementById("changephone").value = myPerson.phoneNumber;
+      document.getElementById("changegender").value = myPerson.gender;
+      document.getElementById('changefirst').disabled=true;
+      document.getElementById('changelast').disabled=true;
+      document.getElementById('changeemail').disabled=true;
+      document.getElementById('changephone').disabled=true;
+      document.getElementById('changegender').disabled=true;
+      var img = document.getElementById("prof");
+      img.src = "public/SilhoutteHead.jpg";
+    }
+    else if(Meteor.user() && Meteor.user().services && Meteor.user().services.facebook){
+      //Configure Facebook login
+      console.log("Logged In:");
+      //get the current user's email
+      Meteor.subscribe("facebook_info");	
+      console.log("grabbing the email"); 
+      var currentEmail = Meteor.user().services.facebook.email;
+      console.log(currentEmail);
+      var output = Friends.findOne({myMail: currentEmail});
+      var output = Friends.findOne({myEmail: currentEmail});
+      if(typeof(output)!="object") {
+        console.log("There's no such user");
+        //populate the field
+        if(counter == 0){			
+          Meteor.subscribe("facebook_info");	
+          var first = Meteor.user().services.facebook.first_name;
+          var last = Meteor.user().services.facebook.last_name;
+          var email = Meteor.user().services.facebook.email;
+          var gender = Meteor.user().services.facebook.gender;
+          var locale = Meteor.user().services.facebook.locale;
+          var id = Meteor.user().services.facebook.id;
+          myPerson = new person(first, last, email, 8675309, gender, locale, id);
+          myPerson = new person(first, last, email, null, gender, locale, id);
+          var img = document.getElementById("prof");
+          img.src = "http://graph.facebook.com/" + id + "/picture/?type=large";
+          counter++;
+        }
+        console.log("Not defined, new user!");
+        friendName = "null"; //null at this time
+        ///These need to be stored in friend list at time of sign in
+        Friends.insert({
+          myEmail: email,
+          firstName: first,
+          lastName: last,
+          myGender: gender,
+          myId: id,
+          friendList: [{name: friendName}]
+        });
+
+      }
+      var locale = Meteor.user().services.facebook.locale;
+      //fetch this user's friend list from his email
+      var output = Friends.findOne({myEmail: currentEmail});
+      console.log("output is: " + output.firstName);
+      var firstName = output.firstName;
+      var lastName = output.lastName;
+      var myEmail = output.myEmail;
+      var myGender = output.myGender;
+      var myId = output.myId;
+
+      var myPerson = new person(firstName, lastName, myEmail, null, myGender, locale, myId);
+
+
+
+      var id = Meteor.user().services.facebook.id;
+
+      var img = document.getElementById("prof");
+      //if(myId != null){
+      img.src = "http://graph.facebook.com/" + id + "/picture/?type=large";
+      document.getElementById("changefirst").value = myPerson.firstname;
+      document.getElementById("changelast").value = myPerson.lastname;
+      document.getElementById("changeemail").value = myPerson.email;
+      document.getElementById("changephone").value = myPerson.phoneNumber;
+      document.getElementById("changegender").value = myPerson.gender;
+
+      document.getElementById('changefirst').disabled=true;
+      document.getElementById('changelast').disabled=true;
+      document.getElementById('changeemail').disabled=true;
+      document.getElementById('changephone').disabled=true;
+      document.getElementById('changegender').disabled=true;
+
+
+    }
+  });
+
+
+
+
+  Deps.autorun(function(){
+    if(Meteor.userId()==null) {
+      console.log("Logs out");
+      Template.everything.rendered = function() {
+      };
+
+    }
+
+    if(Meteor.loggingIn()) {
+    }
+
+  });
+}
+
 var lint;
 var myPerson;
 var counter = 0;
@@ -380,140 +517,4 @@ Template.createDialog.events({
 Template.createDialog.error = function() {
   return Session.get("createError");
 };
-if(Meteor.isClient) {
-  console.log("Welcome to client");
-  Meteor.subscribe("friends");
-  Deps.autorun(function(){
-
-    if(Meteor.user() && Meteor.user().emails && Meteor.user().emails[0].address){
-      //Configuration for email login
-      console.log("email is: " + Meteor.user().emails[0].address);
-      currentEmail = Meteor.user().emails[0].address;
-      var output = Friends.findOne({myEmail: currentEmail});
-      if(typeof(output)!="object") {
-        console.log("There's no such user");
-        myPerson = new person(null, null, currentEmail, null, null, null, null);
-        console.log("Not defined, new user!");
-        friendName = "null";
-        Friends.insert({
-          myEmail: myPerson.email,
-          firstName: myPerson.firstname,
-          lastName: myPerson.lastname,
-          myGender: myPerson.gender,
-          myId: myPerson.id,
-          friendList: [{name: friendName}]
-        });
-      }
-      var output = Friends.findOne({myEmail: currentEmail});
-      console.log("output is: " + output.firstName);
-      var firstName = output.firstName;
-      var lastName = output.lastName;
-      var myEmail = output.myEmail;
-      var myGender = output.myGender;
-      var myId = output.myId;
-      var myPerson = new person(firstName, lastName, myEmail, null, myGender, locale, myId);
-      document.getElementById("changefirst").value = myPerson.firstname;
-      document.getElementById("changelast").value = myPerson.lastname;
-      document.getElementById("changeemail").value = myPerson.email;
-      document.getElementById("changephone").value = myPerson.phoneNumber;
-      document.getElementById("changegender").value = myPerson.gender;
-      document.getElementById('changefirst').disabled=true;
-      document.getElementById('changelast').disabled=true;
-      document.getElementById('changeemail').disabled=true;
-      document.getElementById('changephone').disabled=true;
-      document.getElementById('changegender').disabled=true;
-      var img = document.getElementById("prof");
-      img.src = "public/SilhoutteHead.jpg";
-    }
-    else if(Meteor.user() && Meteor.user().services && Meteor.user().services.facebook){
-      //Configure Facebook login
-      console.log("Logged In:");
-      //get the current user's email
-      Meteor.subscribe("facebook_info");	
-      console.log("grabbing the email"); 
-      var currentEmail = Meteor.user().services.facebook.email;
-      console.log(currentEmail);
-      var output = Friends.findOne({myMail: currentEmail});
-      var output = Friends.findOne({myEmail: currentEmail});
-      if(typeof(output)!="object") {
-        console.log("There's no such user");
-        //populate the field
-        if(counter == 0){			
-          Meteor.subscribe("facebook_info");	
-          var first = Meteor.user().services.facebook.first_name;
-          var last = Meteor.user().services.facebook.last_name;
-          var email = Meteor.user().services.facebook.email;
-          var gender = Meteor.user().services.facebook.gender;
-          var locale = Meteor.user().services.facebook.locale;
-          var id = Meteor.user().services.facebook.id;
-          myPerson = new person(first, last, email, 8675309, gender, locale, id);
-          myPerson = new person(first, last, email, null, gender, locale, id);
-          var img = document.getElementById("prof");
-          img.src = "http://graph.facebook.com/" + id + "/picture/?type=large";
-          counter++;
-        }
-        console.log("Not defined, new user!");
-        friendName = "null"; //null at this time
-        ///These need to be stored in friend list at time of sign in
-        Friends.insert({
-          myEmail: email,
-          firstName: first,
-          lastName: last,
-          myGender: gender,
-          myId: id,
-          friendList: [{name: friendName}]
-        });
-
-      }
-      var locale = Meteor.user().services.facebook.locale;
-      //fetch this user's friend list from his email
-      var output = Friends.findOne({myEmail: currentEmail});
-      console.log("output is: " + output.firstName);
-      var firstName = output.firstName;
-      var lastName = output.lastName;
-      var myEmail = output.myEmail;
-      var myGender = output.myGender;
-      var myId = output.myId;
-
-      var myPerson = new person(firstName, lastName, myEmail, null, myGender, locale, myId);
-
-
-
-      var id = Meteor.user().services.facebook.id;
-
-      var img = document.getElementById("prof");
-      //if(myId != null){
-      img.src = "http://graph.facebook.com/" + id + "/picture/?type=large";
-      document.getElementById("changefirst").value = myPerson.firstname;
-      document.getElementById("changelast").value = myPerson.lastname;
-      document.getElementById("changeemail").value = myPerson.email;
-      document.getElementById("changephone").value = myPerson.phoneNumber;
-      document.getElementById("changegender").value = myPerson.gender;
-
-      document.getElementById('changefirst').disabled=true;
-      document.getElementById('changelast').disabled=true;
-      document.getElementById('changeemail').disabled=true;
-      document.getElementById('changephone').disabled=true;
-      document.getElementById('changegender').disabled=true;
-
-
-    }
-  });
-
-
-
-
-  Deps.autorun(function(){
-    if(Meteor.userId()==null) {
-      console.log("Logs out");
-      Template.everything.rendered = function() {
-      };
-
-    }
-
-    if(Meteor.loggingIn()) {
-    }
-
-  });
-}
 

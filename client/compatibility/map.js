@@ -4,9 +4,31 @@ var selectedMarkerSymbol;
 var userMarkerSymbol;
 var selectedMarker;
 var userMarker
-var GoogleMap;
 var initialize;
 var manualPosition = false;
+
+var GoogleMap;
+
+function getNewGoogleMapsObject() {
+    var mapCanvas = document.getElementById("mapCanvas");
+    var mapOptions = {
+      //center: new google.maps.LatLng(40.4319, -86.9202),
+      zoom: 12,
+      scrollwheel: false,
+      disableDoubleClickZoom: true,
+      streetViewControl: false,
+      disableDefaultUI: true,
+      zoomControl: true,
+      mapMaker: true,
+      mapTypeId: google.maps.MapTypeId.ROAD,
+      styles: [{
+        featureType: "poi",
+        elementType: "label",
+        stylers: [{ visibility: "off" }]
+      }]
+    };
+    return new google.maps.Map(mapCanvas, mapOptions);
+};
 
 function initialize_google_maps() {
   initialize = function() {
@@ -21,26 +43,7 @@ function initialize_google_maps() {
     defaultMarkerSymbol = Object.assign({fillColor: 'lightblue'}, defaultMarkerValues);
     selectedMarkerSymbol = Object.assign({fillColor: 'lightgreen'}, defaultMarkerValues);
     userMarkerSymbol = Object.assign({fillColor: 'teal'}, defaultMarkerValues);
-
-    mapCanvas = document.getElementById("map_canvas");
-    mapOptions = {
-//      center: new google.maps.LatLng(40.4319, -86.9202),
-      zoom: 16,
-      scrollwheel: false,
-      disableDoubleClickZoom: true,
-      streetViewControl: false,
-      disableDefaultUI: true,
-      zoomControl: true,
-      mapMaker: true,
-      mapTypeId: google.maps.MapTypeId.ROAD,
-      styles: [{
-        featureType: "poi",
-        elementType: "label",
-        stylers: [{ visibility: "off" }]
-      }]
-    };
-
-    GoogleMap = new google.maps.Map(mapCanvas, mapOptions);
+    GoogleMap = getNewGoogleMapsObject();//new google.maps.Map(mapCanvas, mapOptions);
     if (navigator.geolocation) {
       userMarker = new google.maps.Marker({
         map: GoogleMap,
@@ -70,33 +73,25 @@ function initialize_google_maps() {
 */
    }
 
-  window.load = function() {
+  
     initialize();
-  }
+ 
+  
+//    subscribeToAllTables();
 
-  //google.maps.event.addDomListener(window, 'load', initialize);
-  
-  
-  var openCreateDialog = function(x, y) {
+};
+var openCreateDialog = function(x, y) {
     Session.set("createCoords", {x: x, y: y});
     Session.set("createError", null);
     Session.set("showCreateDialog", true);
   }
 
-  getMarker = function(x, y) {
+var getMarker = function(x, y) {
     return new google.maps.Marker({
       position: new google.maps.LatLng(x, y)
     });
   }
-//  window.onload = (initialize)
-  Meteor.subscribe("directory");
-  Meteor.subscribe("current_events", initialize);
-  Meteor.subscribe("past_events");
-  Meteor.subscribe("facebook_info");
-  Meteor.subscribe("friends");
-  Meteor.subscribe("sign");
-  Template.map.rendered = initialize;
-};
+
 
 
 function LoadMapEvents() {

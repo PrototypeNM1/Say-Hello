@@ -1,3 +1,18 @@
+Meteor.startup(function() {
+  if (Meteor.userId()) {
+    Session.set("event-type", "current");
+    subscribeToAllTables();
+    Map.initialize();
+    LoadMapEvents();
+  };
+  Deps.autorun(function() {
+    var selected = Session.get("selected");
+    if (selected && ! CurrentEvents.findOne(selected)) {
+      Session.set("selected", null);
+    }
+  });
+});
+
 var lint;
 var myPerson;
 var counter = 0;
@@ -13,19 +28,6 @@ function person(firstname, lastname, email, phoneNumber, gender, loc, idNum)
   this.idNum = idNum;
 }
 
-Meteor.startup(function() {
-  Session.set("event-type", "current");
-  //initGoogleMaps();
-  initialize_google_maps();
-  subscribeToAllTables();
-  Deps.autorun(function() {
-    var selected = Session.get("selected");
-    if (selected && ! CurrentEvents.findOne(selected)) {
-      Session.set("selected", null);
-    }
-
-  });
-});
 
 Template.footer.showEventDetails = function() {
   //$('#event-list').toggle( Session.get("selected") != null );
@@ -47,7 +49,7 @@ Template.details.attending = function() {
 };
 
 Template.details.canGeolocate = function() {
-  initialize(); // google maps
+  Map.initialize(); // google maps
   console.log(navigator + "\n" + navigator.geolocation);
   return navigator.geolocation && true;
 };

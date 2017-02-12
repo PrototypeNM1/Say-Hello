@@ -1,45 +1,18 @@
 <head>
   <title>Say Hello Web-App</title> 
-
-  <!-- Scipts and CSS files -->
   <script src="https://maps.googleapis.com/maps/api/js?sensor=true"></script>
-
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css"> 
-
-$(document).ready(function() { loaded = true; });
   <link rel="stylesheet" href="Say-Hello.css">
-
   <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
   <script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
-
-  <!-- what is this script here for ? -->
   <script>
-$(function() {
-  $( "#tabs" ).tabs();
-});
-/*
-   $(document).delega	document.getElementById("changefirst").value = myPerson.firstname;
-   document.getElementById("changelast").value = myPerson.lastname;
-   document.getElementById("changeemail").value = myPerson.email;
-   document.getElementById("changephone").value = myPerson.phoneNumber;
-   document.getElementById("changegender").value = myPerson.gender;
-   te('[data-role="navbar"] a', 'click', function () {
-   $(thi).addClass('ui-btn-active');
-   $('.ui-content').hide();
-   $('#' + $(this).attr('data-href')).show();
-   return false;//stop default behavior of link
-   });
- */
+    $(function() {
+      $("#tabs" ).tabs();
+    });
   </script>
-
 </head>
 <body>
-
-
-
-
   <div data-role="page" id="foo">  
     <div data-role="header" data-theme="b">
       <!-- The login goes here -->
@@ -48,64 +21,20 @@ $(function() {
         {{loginButtons align="right"}}
         {{/isolate}}
       </div>
-      <h1>Say Hello</h1>	
-    </div><!-- /header -->
-
+      <h1>Say Hello</h1>
+    </div>
     {{> everything}}
-
-    <!--
-      {{#isolate}}
-      {{#if currentUser}}
-      <link rel="stylesheet" href="Say-Hello.css">
-
-      {{else}}
-      <div class="main">
-
-      <div style="padding: 10px;">
-      <h2 style="margin:0"> Say Hello </h2>
-      <p> <i>Dethaw for the world of icebreakers</i> </p>
-
-      <b>Lead Developers</b>
-      <ol>
-      <li>Derek DeWitt</li>
-      <li>Levi Heilman</li>
-      <li>Nicholas Rishel</li>
-      <li>Levi Miller</li>
-      <li>Sakshay Bhatnagar</li>
-      <li>Soumya Kumar</li>
-      </ol>
-
-      <br>
-      <span>Please login to continue ... </span>
-      <br>
-      <br>
-      <span>Made for the CS307 Class Project</span>
-      </div>
-
-
-      </div>
-      {{/if}}
-      {{/isolate}}
-    -->
-
-  </div><!-- /page -->
-
-
-
+  </div>
 </body>
 
 <!-- The mega template -->
 <template name="everything">
-
   {{#isolate}}
   {{#if showEventDetails}}
   {{> details}}
   {{/if}}
   {{/isolate}}
-
-
   <div data-role="none" class="content-body" data-theme="b">	
-
     {{> page}}
   </div>
   <div data-role="footer" class="footer" data-theme="b" id="footer">

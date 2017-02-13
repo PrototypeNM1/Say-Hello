@@ -17,7 +17,7 @@ var Map = {
   },
   options: function() {
     return {
-      zoom: 12,
+      zoom: 16,
       scrollwheel: false,
       disableDoubleClickZoom: true,
       streetViewControl: false,
@@ -112,6 +112,11 @@ var Map = {
   setClickEvents: function() {
     google.maps.event.addListener(userMarker, 'click', function() {
       manualPosition = false;
+    });
+    google.maps.event.addListener(GoogleMap, 'dblclick', function(mouse) {
+      var coords = mouse.latLng;
+      GoogleMap.panTo(coords);
+      userMarker.setPosition(coords);
     });
     GoogleMap.controls[google.maps.ControlPosition.TOP_RIGHT].push(this.recenterButton());
   },

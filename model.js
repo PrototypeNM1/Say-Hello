@@ -1,5 +1,3 @@
-
-
 CurrentEvents = new Meteor.Collection("current_events");
 PastEvents = new Meteor.Collection("past_events");
 Sign = new Meteor.Collection("Sign");
@@ -107,14 +105,14 @@ Meteor.methods({
       console.log("Email login: " + uEmail);
     }
 
-   var updateTable = {name: uName, email: uEmail, fbook_id: uFID};
+    var updateTable = {name: uName, email: uEmail, fbook_id: uFID};
     check(updateTable, {
       name: String,
       email: String,
       fbook_id: String
     });
     check(this.userId, String);
-   if (attendIndex === -1) {
+    if (attendIndex === -1) {
       if (signing_in) {
         CurrentEvents.update(eventId,
           {$push: {attendees: updateTable}});

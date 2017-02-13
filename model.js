@@ -1,3 +1,16 @@
+Friends = new Meteor.Collection("friends");
+Friends.allow({
+  insert: function(userId, friendName) {
+    return true;
+  },
+  update: function(userId, friendName) {
+    return true;
+  }, //update the friend list 
+  remove: function(userId, friendName) {
+    return false;
+  }
+});
+
 CurrentEvents = new Meteor.Collection("current_events");
 PastEvents = new Meteor.Collection("past_events");
 Sign = new Meteor.Collection("Sign");

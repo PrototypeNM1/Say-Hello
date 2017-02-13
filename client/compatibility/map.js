@@ -1,5 +1,6 @@
 var GoogleMap;
 var autocomplete;
+var autocompleteAddress = {};
 //
 var defaultMarkerSymbol; 
 var selectedMarkerSymbol;
@@ -95,26 +96,22 @@ var Map = {
     );
     autocomplete.addListener('place_changed', function() {
       var place = autocomplete.getPlace();
-      for (var component in componentForm) {
-        document.getElementById(component).value = '';
-        document.getElementById(component).disabled = false;
-      }
       for (var i = 0; i < place.address_components.length; i++) {
         var addressType = place.address_components[i].types[0];
-        if (componentForm[addressType]) {
-          var val = place.address_components[i][componentForm[addressType]];
-          document.getElementById(addressType).value = val;
-        }
-      }
+        var val = place.address_components[i].short_name;
+        autocompleteAddress.addressType = val;
+      };
+      var lat = place.geometry.location.lat();
+      var lng = place.geometry.location.lng();
+      var coords = new google.maps.LatLng(lat, lng);
+      GoogleMap.panTo(coords);
+      userMarker.setPosition(coords);
     });
     GoogleMap.controls[google.maps.ControlPosition.TOP_CENTER].push(element); 
   },
   setClickEvents: function() {
     google.maps.event.addListener(userMarker, 'click', function() {
       manualPosition = false;
-    });
-    google.maps.event.addListener(GoogleMap, 'dblclick', function(mouse) {
-      openCreateDialog(mouse.latLng.lat(), mouse.latLng.lng());
     });
     GoogleMap.controls[google.maps.ControlPosition.TOP_RIGHT].push(this.recenterButton());
   },

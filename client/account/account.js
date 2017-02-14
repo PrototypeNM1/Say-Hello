@@ -21,6 +21,7 @@ Template.accountTab.events =  {
         $('#'+enable[i]).parent().addClass('ui-state-disabled');
         DOM.getID(enable[i]).disabled = true;
       }
+
       var user = {
         profile: {
           fname: DOM.getID('fname').value,
@@ -30,7 +31,13 @@ Template.accountTab.events =  {
         }
       };
       Meteor.users.update({'_id': Meteor.userId()}, {$set: user});
-      console.log(Meteor.users.findOne({'_id': Meteor.userId()}));
+      var files = DOM.getID('profilePic').files;
+      _.each(files, function(file) {
+        var ext = file.name.split(".")[1];
+        var filename = Meteor.userId() + "." + ext;
+        Meteor.saveFile(file, filename);
+      });
+      DOM.getID('profilePic').style.display = 'none';
     };
   }
 };
@@ -48,6 +55,7 @@ Template.footer.events({
         }
       }
     }
+    $('#profile').attr('src', Meteor.userId() + '.jpg');
     //facebook integration
     //Meteor.subscribe("facebook_info");
     //var locale = Meteor.user().services.facebook.locale;

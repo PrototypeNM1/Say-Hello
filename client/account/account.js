@@ -35,7 +35,7 @@ Template.accountTab.events =  {
       _.each(files, function(file) {
         var ext = file.name.split(".")[1];
         var filename = Meteor.userId() + "." + ext;
-        Meteor.saveFile(file, filename);
+        Meteor.saveFile(file, filename, '/profile');
       });
       DOM.getID('profilePic').style.display = 'none';
     };
@@ -58,7 +58,8 @@ Template.footer.events({
         }
       }
     }
-    $('#profile').attr('src', Meteor.userId() + '.jpg');
+    var random = Math.floor(Math.random() * 1000);
+    $('#profile').attr('src', 'profile/' + Meteor.userId() + '.jpg?' + random);
     //facebook integration
     //Meteor.subscribe("facebook_info");
     //var locale = Meteor.user().services.facebook.locale;

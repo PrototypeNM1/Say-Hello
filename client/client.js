@@ -5,25 +5,12 @@ if (Meteor.isClient) {
     Map.initialize();
     Deps.autorun(function() {
       if (Meteor.user()) {
+        initializeEverything();
         createEverything();
-        //initSession();
-        subscribeToAllTables();
-        LoadMapEvents();
       } else {
         destroyEverything();
       }
     });
-  });
-
-  Deps.autorun(function() {
-    if (!Meteor.user()) {
-      LOG.msg("User has logged out. Destroying everything ... ");
-    } else {
-      var user = parseMeteorUser(Meteor.user());
-      //change friend to followers
-      
-      //add to follower list
-    } 
   });
 }
 

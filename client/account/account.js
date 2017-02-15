@@ -43,8 +43,12 @@ Template.accountTab.events =  {
 };
 
 Template.footer.events({
-  'click .accountTab': function(){
-    LOG.msg('Trying to render account tab ... ');
+  'click .accountTab': function() {
+    if (Meteor.user()) {
+      LOG.msg('Trying to render account tab ... ');
+    } else {
+      return false;
+    }
     var user = parseMeteorUser(Meteor.user());
     var data = ['fname', 'lname', 'email', 'phone', 'gender'];
     for (var i=0; i<data.length; i++) {

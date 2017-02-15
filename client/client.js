@@ -1,15 +1,16 @@
 if (Meteor.isClient) {
   LOG.msg("Starting client side code ... ");
   Meteor.startup(function() {
-    LOG.msg('Finished loading DOM');
+    LOG.msg('Meteor is starting up ... ');
+    Map.initialize();
     Deps.autorun(function() {
       if (Meteor.user()) {
-        Map.initialize();
-        Session.set("event-type", "current");
+        createEverything();
+        //initSession();
         subscribeToAllTables();
         LoadMapEvents();
       } else {
-        //Map.destroy();
+        destroyEverything();
       }
     });
   });

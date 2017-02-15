@@ -1,6 +1,7 @@
 <template name="accountTab">
-  <h2>Profile</h2>
-  <div class="account-detail">
+  <div class="secure">
+    <h2>Profile</h2>
+    <div class="account-detail">
       <img id="profile" src="SilhouetteHead.jpg" height="100px" width="100px">
       <input type="file" id="profilePic" style="display:none"/>
       <span>First Name:</span><input type="text" id="fname" disabled/><br>
@@ -9,5 +10,6 @@
       <span>Phone Number:</span><input type="text" id="phone" disabled/><br>
       <span>Gender:</span><input type="text" id="gender" disabled/><br>
       <input type="button" id="changeAccount" class="edit" value="Edit"/>
+    </div>
   </div>
 </template>

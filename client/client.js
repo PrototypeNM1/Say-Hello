@@ -161,30 +161,7 @@ Template.footer.events({
       openCreateDialog(position.coords.latitude, position.coords.longitude);
     });
   },
-
   'click .friendsTab': function() {
-    console.log("Clicked friends tab");
-    var currentEmail = null;
-    if(Meteor.user().services.facebook) {
-      currentEmail = Meteor.user().services.facebook.email
-    } else {
-      currentEmail = user.emails[o].address;
-    }
-    var list = new Array();
-    var result = Friends.findOne({myEmail: currentEmail});
-    var friends = result.friendList;
-    console.log(friends);
-    for(var i=0; i<friends.length; i++) {
-      if(typeof(friends[i])!="object") {
-        console.log("Friend# " + (i) + " " + friends[i]);
-        list = list + '<div style="background-color: #333; padding: 5px; width: 100%; border-radius: 5px; box-shadow: 1px 1px 1px 1px grey;">';
-        var myFriend = Friends.findOne({myEmail: friends[i]});
-        list = list + "<br>" + myFriend.firstName + " " + myFriend.lastName + "<br>";
-        var email = myFriend.myEmail;
-        list = list + email;
-        list = list + '</div>'
-      }
-    }
   },
 });
 

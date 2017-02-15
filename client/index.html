@@ -145,6 +145,7 @@
     <div data-role="navbar" id="footer-nav">
       <ul>
         <li><a href="#epanel" data-href="epanel" class="ui-btn-active"><h3>Events</h3></a></li>
+        
         <li><a href="#ppanel" data-href="ppanel" class="friendsTab"><h3>Friends</h3></a></li>
         <li><a href="#apanel" class="accountTab" data-href="apanel"><h3>Account</h3></a></li>
       </ul>
@@ -162,12 +163,19 @@
         <li><a href="#" id="past-current">View Past Events</a></li>
       </ul>
     </div>
-
     <div id="ppanel" class="ui-content" style="overflow-y: auto;">
-      {{> people_tab}}
+      {{#if currentUser}}
+        {{> people_tab}}
+      {{else}}
+        {{> emptyState}}
+      {{/if}}
     </div>
     <div id="apanel" class="ui-content" style="overflow-y: auto;">
-      {{> accountTab}}
+      {{#if currentUser}}
+        {{> accountTab}}
+      {{else}}
+        {{> emptyState}}
+      {{/if}}
     </div>
   </div>
 </template>

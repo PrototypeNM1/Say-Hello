@@ -164,18 +164,10 @@
       </ul>
     </div>
     <div id="ppanel" class="ui-content" style="overflow-y: auto;">
-      {{#if currentUser}}
         {{> people_tab}}
-      {{else}}
-        {{> emptyState}}
-      {{/if}}
     </div>
     <div id="apanel" class="ui-content" style="overflow-y: auto;">
-      {{#if currentUser}}
         {{> accountTab}}
-      {{else}}
-        {{> emptyState}}
-      {{/if}}
     </div>
   </div>
 </template>

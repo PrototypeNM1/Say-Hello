@@ -68,8 +68,6 @@ Template.details.events({
   'click .sign-out': function() {
     Meteor.call('sign_', Session.get("selected"), false); // sign out
     //Meteor call to check the attendee list
-
-
     return false;
   },
   'click .curLoc': function() {
@@ -81,32 +79,6 @@ Template.details.events({
     Session.set("selected", null);
   }
 });
-
-Template.event_list.event_list = function() {
-  // Condition here to grab either past or current events
-  if (Session.get("event-type") == "current") {
-    return CurrentEvents.find(); // current events
-  } else {
-    console.log("User Id: " + Meteor.userId());
-    var pastEvents = PastEvents.findOne({user: Meteor.userId()});
-    if (pastEvents) {
-      return CurrentEvents.find({_id: {$in: pastEvents.events}}); // find events that are in past events array
-    } else {
-      return CurrentEvents.find("Empty"); // No past events (no event will have an _id of 'Empty'
-    }
-  }
-};
-
-Template.event_list.event_list_past = function() {
-  return null; //PastEvents.find(); 
-}
-
-Template.event_list.rendered = function() {
-  $('#event-list').listview('refresh');
-  $('.event-item').click(function() {
-    Session.set("selected", $(this).attr('name'));
-  });
-};
 
 Template.attendance.events({
   'click #shareContact': function(event) {
@@ -142,12 +114,6 @@ Template.footer.events({
   'click .sign-out': function() {
     Meteor.call('sign_', Session.get("selected"), false); // sign out
     return false;
-  },
-  'click .curLoc': function() {
-    // create thing at current location
-    navigator.geolocation.getCurrentPosition(function(position) {
-      openCreateDialog(position.coords.latitude, position.coords.longitude);
-    });
   },
   'click .friendsTab': function() {
   },

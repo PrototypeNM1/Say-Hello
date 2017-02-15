@@ -144,18 +144,16 @@
   <div data-role="tabs" id="footer-tabs">
     <div data-role="navbar" id="footer-nav">
       <ul>
-        <li><a href="#epanel" id="eventTab" data-href="epanel" class="ui-btn-active"><h3>Events</h3></a></li>
-        
+        <li><a href="#epanel" id="eventTab" data-href="epanel" class="ui-btn-active"><h3>Events</h3></a></li> 
         <li><a href="#ppanel" id="socialTab" data-href="ppanel"><h3>Social</h3></a></li>
         <li><a href="#apanel" id="accountTab" data-href="apanel"><h3>Account</h3></a></li>
       </ul>
-    </div><!-- /navbar -->
-    <div id="message"></div>
+    </div>
     <div id="epanel" class="ui-content" style="overflow-y: auto;">
       {{#isolate}}
-      {{#if showEventDetails}}
-      {{> details}}
-      {{/if}}
+        {{#if showEventDetails}}
+          {{> details}}
+        {{/if}}
       {{/isolate}}
       <ul id="event-list" data-role="listview" data-inset="true">
         <li><a href="#" id="create">Create New Event</a></li>
